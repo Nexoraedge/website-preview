@@ -92,7 +92,7 @@ export default function Navbar({
                   onClick={onOpenVision}
                   className="text-amber-400 hover:text-amber-300 transition-colors hidden sm:flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Sparkles className="w-3 h-3" />
+
                   <span>
                     {lang === "hi"
                       ? "मुनि श्री आदित्य सागर जी महाराज की पावन प्रेरणा"

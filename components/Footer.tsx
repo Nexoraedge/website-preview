@@ -57,22 +57,7 @@ export default function Footer({
               A visionary healthcare ecosystem founded on the timeless Jain virtues of <strong className="text-white/80 font-medium">Anukampa</strong> (Compassion), and <strong className="text-white/80 font-medium">Nishkam Seva</strong> (Service).
             </p>
 
-            {/* Spiritual Tribute Box - Sleeker */}
-            <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05] w-full max-w-sm group hover:border-white/10 hover:bg-white/[0.04] transition-all">
-              <div className="flex items-center gap-2 text-amber-500 mb-2.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Our Guiding Light</span>
-              </div>
-              <p className="text-xs text-white/60 leading-relaxed font-light mb-3">
-                Inspired by <strong className="text-white/90 font-medium">Muni Aditya Sagar Ji Maharaj</strong>, shaped by the vision of <strong className="text-white/90 font-medium">Abhishek Jain</strong>.
-              </p>
-              <button
-                onClick={() => onOpenVision?.()}
-                className="text-[11px] font-semibold text-white/80 group-hover:text-amber-400 transition-colors flex items-center gap-1.5"
-              >
-                Read Muni Shri&apos;s Message <ArrowRight className="w-3 h-3" />
-              </button>
-            </div>
+
           </div>
 
           {/* Spacer for desktop */}

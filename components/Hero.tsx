@@ -44,8 +44,7 @@ export default function Hero({
               ? "जैन दर्शन व मूल्यों से प्रेरित स्वास्थ्य सेवा"
               : "Care Inspired by Jain Values"}
           </span>
-          <span className="text-blue-300">•</span>
-          <span className="text-amber-600 font-bold">आदित्यम् अनुकम्पा</span>
+
         </motion.div>
 
         {/* Center Headline */}
@@ -184,15 +183,7 @@ export default function Hero({
                 className="object-cover"
               />
             </div>
-            <div>
-              <div className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                <span>{lang === "hi" ? "पावन प्रेरणा" : "Prerna Srot"}</span>
-              </div>
-              <p className="text-xs font-bold text-white leading-tight">
-                Muni Aditya Sagar Ji Maharaj
-              </p>
-            </div>
+
           </button>
 
           {/* Floating Glassmorphism Stat Card over the image */}

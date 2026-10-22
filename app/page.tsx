@@ -6,7 +6,6 @@ import Hero from "@/components/Hero";
 import PillarsGrid from "@/components/PillarsGrid";
 import MuniVisionSection from "@/components/MuniVisionSection";
 import DoctorDirectory from "@/components/DoctorDirectory";
-import HospitalNetwork from "@/components/HospitalNetwork";
 import HowItWorks from "@/components/HowItWorks";
 import PartnerCTA from "@/components/PartnerCTA";
 import AppPromo from "@/components/AppPromo";
@@ -80,31 +79,28 @@ export default function HomePage() {
           onOpenVision={() => setIsVisionOpen(true)}
         />
 
-        {/* 5. Verified OPD Doctors Directory */}
+        {/* 5. Verified Specialists & Partner Hospitals Network (Unified Dual Marquee) */}
         <DoctorDirectory
           lang={lang}
           onOpenBooking={handleOpenBooking}
-        />
-
-        {/* 6. Empanelled Partner Hospitals Network */}
-        <HospitalNetwork
           onOpenPartner={() => setIsPartnerOpen(true)}
-          onOpenBooking={() => handleOpenBooking()}
         />
 
         {/* 7. How It Works (4-Step Patient Journey) */}
         <HowItWorks
+          lang={lang}
           onOpenBooking={() => handleOpenBooking()}
           onOpenPartner={() => setIsPartnerOpen(true)}
         />
 
         {/* 8. Provider & Hospital Empanelment CTA */}
         <PartnerCTA
+          lang={lang}
           onOpenPartner={() => setIsPartnerOpen(true)}
         />
 
         {/* 9. Mobile App Promotion & QR Code Scanner */}
-        <AppPromo />
+        <AppPromo lang={lang} />
       </main>
 
       {/* 10. Comprehensive Clinical & Ethical Footer */}
