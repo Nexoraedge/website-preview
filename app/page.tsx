@@ -1,69 +1,141 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useState } from "react";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import PillarsGrid from "@/components/PillarsGrid";
+import MuniVisionSection from "@/components/MuniVisionSection";
+import DoctorDirectory from "@/components/DoctorDirectory";
+import HospitalNetwork from "@/components/HospitalNetwork";
+import HowItWorks from "@/components/HowItWorks";
+import PartnerCTA from "@/components/PartnerCTA";
+import AppPromo from "@/components/AppPromo";
+import Footer from "@/components/Footer";
+import {
+  PartnerModal,
+  AppDownloadModal,
+  MuniVisionModal,
+  BookingModal,
+} from "@/components/Modals";
+
+export default function HomePage() {
+  const [lang, setLang] = useState<"en" | "hi">("en");
+  const [isPartnerOpen, setIsPartnerOpen] = useState(false);
+  const [isAppOpen, setIsAppOpen] = useState(false);
+  const [isVisionOpen, setIsVisionOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState<string | undefined>("Dr. Satish Jain");
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string | undefined>("Cardiology");
+
+  const handleOpenBooking = (doctorName?: string, specialty?: string) => {
+    if (doctorName) setSelectedDoctor(doctorName);
+    if (specialty) setSelectedSpecialty(specialty);
+    setIsBookingOpen(true);
+  };
+
+  const handleSelectPillar = (pillarId: string) => {
+    if (pillarId === "opd") {
+      const el = document.getElementById("doctors");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else if (pillarId === "ipd") {
+      const el = document.getElementById("hospitals");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else if (pillarId === "emergency") {
+      window.location.href = "tel:18002081008";
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen flex flex-col bg-[#FAFAF8] text-[#172554] selection:bg-[#2563EB] selection:text-white">
+      {/* 1. Optimized Navbar with English / Hindi Toggle & New Logo */}
+      <Navbar
+        lang={lang}
+        onToggleLang={setLang}
+        onOpenBooking={() => handleOpenBooking()}
+        onOpenPartner={() => setIsPartnerOpen(true)}
+        onOpenApp={() => setIsAppOpen(true)}
+        onOpenVision={() => setIsVisionOpen(true)}
+      />
+
+      <main className="flex-1">
+        {/* 2. Centered Editorial Hero Section */}
+        <Hero
+          lang={lang}
+          onOpenBooking={handleOpenBooking}
+          onOpenPartner={() => setIsPartnerOpen(true)}
+          onOpenApp={() => setIsAppOpen(true)}
+          onOpenVision={() => setIsVisionOpen(true)}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        {/* 3. The 5 Core Pillars of Care */}
+        <PillarsGrid
+          lang={lang}
+          onSelectPillar={handleSelectPillar}
+          onOpenBooking={() => handleOpenBooking()}
+        />
+
+        {/* 4. Muni Shri's Inspiration & Sacred Origin (Adityam Anukampa) */}
+        <MuniVisionSection
+          lang={lang}
+          onOpenVision={() => setIsVisionOpen(true)}
+        />
+
+        {/* 5. Verified OPD Doctors Directory */}
+        <DoctorDirectory
+          lang={lang}
+          onOpenBooking={handleOpenBooking}
+        />
+
+        {/* 6. Empanelled Partner Hospitals Network */}
+        <HospitalNetwork
+          onOpenPartner={() => setIsPartnerOpen(true)}
+          onOpenBooking={() => handleOpenBooking()}
+        />
+
+        {/* 7. How It Works (4-Step Patient Journey) */}
+        <HowItWorks
+          onOpenBooking={() => handleOpenBooking()}
+          onOpenPartner={() => setIsPartnerOpen(true)}
+        />
+
+        {/* 8. Provider & Hospital Empanelment CTA */}
+        <PartnerCTA
+          onOpenPartner={() => setIsPartnerOpen(true)}
+        />
+
+        {/* 9. Mobile App Promotion & QR Code Scanner */}
+        <AppPromo />
       </main>
+
+      {/* 10. Comprehensive Clinical & Ethical Footer */}
+      <Footer
+        onOpenVision={() => setIsVisionOpen(true)}
+        onOpenPartner={() => setIsPartnerOpen(true)}
+        onOpenApp={() => setIsAppOpen(true)}
+      />
+
+      {/* Interactive Modals */}
+      <PartnerModal
+        isOpen={isPartnerOpen}
+        onClose={() => setIsPartnerOpen(false)}
+      />
+
+      <AppDownloadModal
+        isOpen={isAppOpen}
+        onClose={() => setIsAppOpen(false)}
+      />
+
+      <MuniVisionModal
+        isOpen={isVisionOpen}
+        onClose={() => setIsVisionOpen(false)}
+      />
+
+      <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+        defaultDoctor={selectedDoctor}
+        defaultSpecialty={selectedSpecialty}
+      />
     </div>
   );
 }
