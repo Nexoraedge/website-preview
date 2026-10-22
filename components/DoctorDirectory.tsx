@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Stethoscope,
   Star,
@@ -390,8 +391,24 @@ export default function DoctorDirectory({
     };
   }, []);
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const springConfig = { stiffness: 85, damping: 26, mass: 0.6 };
+  const rawOrb1Y = useTransform(scrollYProgress, [0, 1], [-80, 80]);
+  const rawOrb2Y = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const rawOrb3Y = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+
+  const orb1Y = useSpring(rawOrb1Y, springConfig);
+  const orb2Y = useSpring(rawOrb2Y, springConfig);
+  const orb3Y = useSpring(rawOrb3Y, springConfig);
+
   return (
     <section
+      ref={sectionRef}
       id="doctors"
       className="relative overflow-hidden font-sans select-none pt-14 pb-28 sm:pb-36"
       style={{
@@ -403,10 +420,19 @@ export default function DoctorDirectory({
       {/* Anchor for Hospital Nav Link */}
       <div id="hospitals" className="scroll-mt-28" />
 
-      {/* 3D Soft Lighting Glows in Deep Canvas */}
-      <div className="absolute top-1/6 right-10 w-[550px] h-[550px] bg-blue-400/15 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/2 left-10 w-[650px] h-[650px] bg-emerald-500/12 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
+      {/* 3D Soft Lighting Glows with Parallax Float */}
+      <motion.div
+        style={{ y: orb1Y }}
+        className="absolute top-1/6 right-10 w-[550px] h-[550px] bg-blue-400/15 rounded-full blur-[140px] pointer-events-none"
+      />
+      <motion.div
+        style={{ y: orb2Y }}
+        className="absolute top-1/2 left-10 w-[650px] h-[650px] bg-emerald-500/12 rounded-full blur-[160px] pointer-events-none"
+      />
+      <motion.div
+        style={{ y: orb3Y }}
+        className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none"
+      />
 
       {/* Embedded Styles for Dual Bi-Directional Infinite Marquees & Card Interaction */}
       <style jsx global>{`

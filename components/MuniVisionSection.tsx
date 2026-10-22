@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Heart,
   ShieldCheck,
@@ -24,6 +24,24 @@ export default function MuniVisionSection({
   onOpenVision,
 }: MuniVisionSectionProps) {
   const [activeTab, setActiveTab] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Locomotive-style scroll momentum tracking
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const springConfig = { stiffness: 85, damping: 26, mass: 0.6 };
+  const rawPortraitY = useTransform(scrollYProgress, [0, 1], [35, -35]);
+  const rawStoryY = useTransform(scrollYProgress, [0, 1], [-20, 20]);
+  const rawOrb1Y = useTransform(scrollYProgress, [0, 1], [-60, 60]);
+  const rawOrb2Y = useTransform(scrollYProgress, [0, 1], [60, -60]);
+
+  const portraitY = useSpring(rawPortraitY, springConfig);
+  const storyY = useSpring(rawStoryY, springConfig);
+  const orb1Y = useSpring(rawOrb1Y, springConfig);
+  const orb2Y = useSpring(rawOrb2Y, springConfig);
 
   const valuesTabs = [
     {
@@ -138,6 +156,7 @@ export default function MuniVisionSection({
 
   return (
     <section
+      ref={sectionRef}
       id="muni-vision"
       className="relative overflow-hidden font-sans select-none"
       style={{
@@ -146,9 +165,15 @@ export default function MuniVisionSection({
           "linear-gradient(180deg, #FAFAF8 0%, #F5F7FA 35%, #EDF2F7 70%, #E2E8F0 100%)",
       }}
     >
-      {/* Soft Ambient Sunlight Glows */}
-      <div className="absolute top-10 right-10 w-[500px] h-[500px] bg-amber-200/20 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-[500px] h-[500px] bg-blue-200/25 rounded-full blur-[100px] pointer-events-none" />
+      {/* Soft Ambient Sunlight Glows with Parallax Motion */}
+      <motion.div
+        style={{ y: orb1Y }}
+        className="absolute top-10 right-10 w-[500px] h-[500px] bg-amber-200/20 rounded-full blur-[100px] pointer-events-none"
+      />
+      <motion.div
+        style={{ y: orb2Y }}
+        className="absolute bottom-10 left-10 w-[500px] h-[500px] bg-blue-200/25 rounded-full blur-[100px] pointer-events-none"
+      />
 
       {/* =========================================================================
           PART 1: THE SACRED GENESIS & ARCH PORTRAIT
@@ -156,8 +181,9 @@ export default function MuniVisionSection({
       <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-20 sm:pt-28 pb-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-center">
 
-          {/* Left Column: The Sacred Arch Portrait */}
+          {/* Left Column: The Sacred Arch Portrait with Parallax Lift */}
           <motion.div
+            style={{ y: portraitY }}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
@@ -214,8 +240,11 @@ export default function MuniVisionSection({
             </button>
           </motion.div>
 
-          {/* Right Column: Origin Narrative & Leadership */}
-          <div className="md:col-span-7 space-y-6 lg:space-y-8">
+          {/* Right Column: Origin Narrative & Leadership with Staggered Parallax */}
+          <motion.div
+            style={{ y: storyY }}
+            className="md:col-span-7 space-y-6 lg:space-y-8"
+          >
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -289,8 +318,7 @@ export default function MuniVisionSection({
               </div>
             </motion.div>
 
-
-          </div>
+          </motion.div>
 
         </div>
       </div>

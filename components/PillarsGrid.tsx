@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Stethoscope,
   FlaskConical,
@@ -250,6 +251,20 @@ export default function PillarsGrid({
 }: PillarsGridProps) {
   const [activeId, setActiveId] = useState("opd");
   const isHi = lang === "hi";
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Locomotive-style scroll momentum tracking
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const springConfig = { stiffness: 85, damping: 26, mass: 0.6 };
+  const rawTrayScale = useTransform(scrollYProgress, [0, 0.45], [0.94, 1]);
+  const rawTrayY = useTransform(scrollYProgress, [0, 0.45], [50, 0]);
+  const rawTrayOpacity = useTransform(scrollYProgress, [0, 0.25], [0.75, 1]);
+  const trayScale = useSpring(rawTrayScale, springConfig);
+  const trayY = useSpring(rawTrayY, springConfig);
 
   const handleActionClick = (pillarId: string) => {
     onSelectPillar?.(pillarId);
@@ -263,8 +278,9 @@ export default function PillarsGrid({
 
   return (
     <section
+      ref={sectionRef}
       id="services"
-      className="py-12 bg-[#FAFAF8] font-sans selection:bg-[#2563EB] selection:text-white  scroll-mt-28"
+      className="py-12 bg-[#FAFAF8] font-sans selection:bg-[#2563EB] selection:text-white scroll-mt-28 relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
 
@@ -272,7 +288,6 @@ export default function PillarsGrid({
             SECTION HEADER (HERO EDITORIAL TYPOGRAPHY & REFINED PILL)
         ========================================================================= */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14 sm:mb-16">
-
 
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-[#172554] tracking-tight leading-[1.08]">
             {isHi ? (
@@ -300,15 +315,16 @@ export default function PillarsGrid({
         </div>
 
         {/* =========================================================================
-            FROSTED GLASS ACCORDION TRAY WITH LIQUID GRADIENT BLOBS
-            - Fixed overflow & corner bleeding via WebKit masking & isolation
-            - Generous 590px height ensuring zero vertical crowding
+            FROSTED GLASS ACCORDION TRAY WITH LOCOMOTIVE MOMENTUM & REVEAL
         ========================================================================= */}
-        <div
-          className="w-full bg-[#E2E8F0]/70 p-3 sm:p-3.5 rounded-[2.2rem] border border-slate-200/90 shadow-lg flex flex-col lg:flex-row gap-2.5 min-h-[600px] lg:h-[590px] overflow-hidden"
+        <motion.div
           style={{
+            scale: trayScale,
+            y: trayY,
+            opacity: rawTrayOpacity,
             WebkitMaskImage: "-webkit-radial-gradient(white, black)",
           }}
+          className="w-full bg-[#E2E8F0]/70 p-3 sm:p-3.5 rounded-[2.2rem] border border-slate-200/90 shadow-lg flex flex-col lg:flex-row gap-2.5 min-h-[600px] lg:h-[590px] overflow-hidden"
         >
           {PILLARS.map((pillar) => {
             const Icon = pillar.icon;
@@ -573,19 +589,21 @@ export default function PillarsGrid({
               </div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* =========================================================================
             COMMUNITY SAVINGS BANNER (FROSTED GLASS MEDICAL CARD)
         ========================================================================= */}
-        <div
-          className="mt-12 relative rounded-[2rem] p-8 sm:p-10 border border-blue-200/80 shadow-md flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden"
+        <motion.div
           style={{
+            scale: trayScale,
+            y: trayY,
             background: "linear-gradient(135deg, rgba(239, 246, 255, 0.85) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(240, 253, 250, 0.85) 100%)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
             WebkitMaskImage: "-webkit-radial-gradient(white, black)",
           }}
+          className="mt-12 relative rounded-[2rem] p-8 sm:p-10 border border-blue-200/80 shadow-md flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden"
         >
           {/* Subtle Ambient Blobs behind the Banner */}
           <div
@@ -649,7 +667,7 @@ export default function PillarsGrid({
             <span>{isHi ? "रियायती ओपीडी बुक करें" : "Book Discounted OPD Now"}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
-        </div>
+        </motion.div>
 
       </div>
     </section>

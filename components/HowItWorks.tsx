@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Compass,
   Ticket,
@@ -253,6 +254,24 @@ export default function HowItWorks({
 }: HowItWorksProps) {
   // Track which card is opened/expanded (null if none, or step id 1-5)
   const [openedCardId, setOpenedCardId] = useState<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Locomotive-style scroll momentum tracking
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const springConfig = { stiffness: 85, damping: 26, mass: 0.6 };
+  const rawGridScale = useTransform(scrollYProgress, [0, 0.4], [0.94, 1]);
+  const rawGridY = useTransform(scrollYProgress, [0, 0.4], [45, 0]);
+  const rawOrb1Y = useTransform(scrollYProgress, [0, 1], [-80, 80]);
+  const rawOrb2Y = useTransform(scrollYProgress, [0, 1], [80, -80]);
+
+  const gridScale = useSpring(rawGridScale, springConfig);
+  const gridY = useSpring(rawGridY, springConfig);
+  const orb1Y = useSpring(rawOrb1Y, springConfig);
+  const orb2Y = useSpring(rawOrb2Y, springConfig);
 
   const toggleCard = (id: number) => {
     setOpenedCardId((prev) => (prev === id ? null : id));
@@ -260,6 +279,7 @@ export default function HowItWorks({
 
   return (
     <section
+      ref={sectionRef}
       id="how-it-works"
       className="py-24 sm:py-32 font-sans select-none relative text-white overflow-hidden"
       style={{
@@ -268,6 +288,15 @@ export default function HowItWorks({
           "linear-gradient(180deg, #020409 0%, #050B14 20%, #081020 50%, #050A14 80%, #020409 100%)",
       }}
     >
+      {/* 3D Atmospheric Soft Lighting Orbs with Parallax Float */}
+      <motion.div
+        style={{ y: orb1Y }}
+        className="absolute top-12 left-10 w-[550px] h-[550px] bg-blue-600/15 rounded-full blur-[150px] pointer-events-none"
+      />
+      <motion.div
+        style={{ y: orb2Y }}
+        className="absolute bottom-12 right-10 w-[550px] h-[550px] bg-amber-500/12 rounded-full blur-[150px] pointer-events-none"
+      />
       {/* Dynamic Embedded Styles for Uiverse.io Javierrocadev 3D Layered Pentagon Lotus Bloom */}
       <style jsx global>{`
         .uiverse-pentagon-card {
@@ -419,7 +448,13 @@ export default function HowItWorks({
         {/* ==============================================================
             5-STEP INTERACTIVE 3D LAYERED PENTAGON CARDS (Responsive Layout)
         ============================================================== */}
-        <div className="flex flex-wrap justify-center gap-7 mb-14">
+        <motion.div
+          style={{
+            scale: gridScale,
+            y: gridY,
+          }}
+          className="flex flex-wrap justify-center gap-7 mb-14"
+        >
           {STEPS.map((step) => {
             const Icon = step.icon;
             const isOpen = openedCardId === step.id;
@@ -574,12 +609,18 @@ export default function HowItWorks({
               </div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* ==============================================================
             BOTTOM 3D SOLID ACTION BANNER (Human, Non-Techy)
         ============================================================== */}
-        <div className="bg-gradient-to-r from-[#0C1628] via-[#11203A] to-[#0C1628] border-2 border-amber-500/50 border-b-[6px] border-b-[#7A4400] rounded-[2.5rem] p-7 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.7)]">
+        <motion.div
+          style={{
+            scale: gridScale,
+            y: gridY,
+          }}
+          className="bg-gradient-to-r from-[#0C1628] via-[#11203A] to-[#0C1628] border-2 border-amber-500/50 border-b-[6px] border-b-[#7A4400] rounded-[2.5rem] p-7 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.7)]"
+        >
           <div className="space-y-2 max-w-xl text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wider border border-amber-500/40 border-b-2 border-b-amber-600">
               <HeartHandshake className="w-4 h-4 text-amber-400" />
@@ -628,7 +669,7 @@ export default function HowItWorks({
               <span>1800-208-1008 (SOS)</span>
             </a>
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </section>

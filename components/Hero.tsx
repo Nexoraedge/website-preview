@@ -1,14 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   ArrowRight,
-  Sparkles,
   ShieldCheck,
   Building2,
-  CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 
 interface HeroProps {
@@ -27,9 +26,31 @@ export default function Hero({
   onOpenApp,
   onOpenVision,
 }: HeroProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Locomotive-style scroll momentum tracking for Hero
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  const springConfig = { stiffness: 85, damping: 26, mass: 0.6 };
+
+  // Parallax float on the image and floating consoles
+  const rawImageY = useTransform(scrollYProgress, [0, 1], [0, 40]);
+  const rawImageScale = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
+  const imageY = useSpring(rawImageY, springConfig);
+  const imageScale = useSpring(rawImageScale, springConfig);
+
+  const rawCardFloatY = useTransform(scrollYProgress, [0, 1], [0, -25]);
+  const cardFloatY = useSpring(rawCardFloatY, springConfig);
+
   return (
-    <div className="bg-[#FAFAF8] font-sans selection:bg-[#2563EB] selection:text-white pb-20">
-      <main className="pt-20 sm:pt-28 px-6 max-w-7xl mx-auto flex flex-col items-center text-center">
+    <div
+      ref={containerRef}
+      className="bg-[#FAFAF8] font-sans selection:bg-[#2563EB] selection:text-white pb-16 sm:pb-20 relative overflow-hidden"
+    >
+      <main className="pt-16 sm:pt-24 px-4 sm:px-6 max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
 
         {/* Soft Spiritual Badge */}
         <motion.div
@@ -44,7 +65,6 @@ export default function Hero({
               ? "जैन दर्शन व मूल्यों से प्रेरित स्वास्थ्य सेवा"
               : "Care Inspired by Jain Values"}
           </span>
-
         </motion.div>
 
         {/* Center Headline */}
@@ -73,7 +93,7 @@ export default function Hero({
           transition={{ duration: 0.7, delay: 0.2 }}
         >
           {lang === "hi" ? (
-            <p className="mt-6 sm:mt-8 text-base sm:text-lg md:text-xl text-[#172554]/75 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="mt-5 sm:mt-8 text-base sm:text-lg md:text-xl text-[#172554]/75 max-w-2xl mx-auto font-light leading-relaxed">
               चिकित्सा देखभाल में सुलभता, वहनीयता और गरिमा लाने की एक पावन दूरदर्शी पहल।{" "}
               प्रेरणा स्रोत{" "}
               <strong className="font-semibold text-[#172554]">
@@ -83,7 +103,7 @@ export default function Hero({
               <strong className="font-semibold text-[#172554]">अभिषेक जैन</strong>।
             </p>
           ) : (
-            <p className="mt-6 sm:mt-8 text-base sm:text-lg md:text-xl text-[#172554]/70 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="mt-5 sm:mt-8 text-base sm:text-lg md:text-xl text-[#172554]/70 max-w-2xl mx-auto font-light leading-relaxed">
               A visionary initiative improving access, affordability, and dignity in medical care.
               Inspired by{" "}
               <strong className="font-semibold text-[#172554]">
@@ -100,7 +120,7 @@ export default function Hero({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-4 mt-8 sm:mt-10"
+          className="flex flex-col sm:flex-row gap-4 mt-8 sm:mt-10 w-full sm:w-auto"
         >
           <button
             type="button"
@@ -120,95 +140,128 @@ export default function Hero({
           </button>
         </motion.div>
 
-        {/* Feature Badges */}
+        {/* =========================================================================
+            CLEAN REFINED TRUST PILLAR CAPSULES
+        ========================================================================= */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-slate-500"
+          className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 max-w-4xl mx-auto px-2"
         >
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>{lang === "hi" ? "पारदर्शी मूल्य निर्धारण" : "Zero Hidden Fees"}</span>
-          </span>
-          <span>•</span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
+          {/* Badge 1 */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-2xs text-xs font-semibold text-slate-700 hover:border-emerald-500/50 hover:bg-emerald-50/30 transition-all">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span>{lang === "hi" ? "पारदर्शी दरें — शून्य छिपा शुल्क" : "Zero Hidden Fees"}</span>
+          </div>
+
+          {/* Badge 2 */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-2xs text-xs font-semibold text-slate-700 hover:border-blue-500/50 hover:bg-blue-50/30 transition-all">
+            <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
             <span>{lang === "hi" ? "प्राथमिकता ओपीडी स्लॉट" : "Priority Doctor OPD"}</span>
-          </span>
-          <span>•</span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-amber-600" />
+          </div>
+
+          {/* Badge 3 */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-2xs text-xs font-semibold text-slate-700 hover:border-amber-500/50 hover:bg-amber-50/30 transition-all">
+            <span className="w-2 h-2 rounded-full bg-amber-500" />
             <span>{lang === "hi" ? "NABL प्रमाणित लैब" : "NABL Certified Diagnostics"}</span>
-          </span>
-          <span>•</span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-indigo-600" />
+          </div>
+
+          {/* Badge 4 */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-2xs text-xs font-semibold text-slate-700 hover:border-indigo-500/50 hover:bg-indigo-50/30 transition-all">
+            <span className="w-2 h-2 rounded-full bg-indigo-500" />
             <span>{lang === "hi" ? "सात्विक भोजन सहयोग" : "Satvik Hospital Assistance"}</span>
-          </span>
+          </div>
         </motion.div>
 
-        {/* Massive Cinematic Image Container */}
+        {/* =========================================================================
+            CINEMATIC CLEAN HERO IMAGE FRAME (UNSTUFFED, UNCUTTED, BREATHABLE)
+        ========================================================================= */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="mt-14 sm:mt-16 w-full max-w-6xl aspect-[16/7] bg-gray-200 rounded-[2.5rem] overflow-hidden shadow-2xl relative border border-gray-200"
+          transition={{ duration: 0.9, delay: 0.4 }}
+          className="mt-10 sm:mt-14 w-full max-w-6xl aspect-[16/10] sm:aspect-[16/9] lg:aspect-[21/9] bg-slate-100 rounded-[2rem] sm:rounded-[2.8rem] overflow-hidden shadow-[0_20px_50px_-15px_rgba(23,37,84,0.12)] relative border border-slate-200/90 group"
         >
-          {/* High-End Clinical Photograph */}
-          <Image
-            src="/images/doctor_consultation.jpg"
-            alt="Adityam Niramayaa Premium Healthcare Facility"
-            fill
-            sizes="(max-width: 1200px) 100vw, 1200px"
-            className="w-full h-full object-cover"
-            priority
-          />
+          {/* Parallax Image with Generous Headroom (Not Cutted) */}
+          <motion.div
+            style={{ y: imageY, scale: imageScale }}
+            className="absolute inset-0 w-full h-full"
+          >
+            <Image
+              src="/images/doctor_consultation.jpg"
+              alt="Adityam Niramayaa Premium Healthcare Facility"
+              fill
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              className="w-full h-full object-cover object-[center_20%] sm:object-center"
+              priority
+            />
+          </motion.div>
 
-          {/* Vignette Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#172554]/40 via-transparent to-transparent z-10" />
+          {/* Delicate Vignette at bottom edge for contrast on desktop only */}
+          <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-slate-900/35 via-transparent to-transparent pointer-events-none z-10" />
 
-          {/* Top-Right Floating Blessing Emblem */}
+          {/* Top-Right Sacred Inspiration Pill (Desktop Only, Subtle & Light) */}
           <button
             type="button"
             onClick={onOpenVision}
-            className="absolute top-6 right-6 md:top-8 md:right-8 z-20 bg-[#0B1B4D]/85 backdrop-blur-xl px-4 py-2.5 rounded-2xl border border-amber-400/40 shadow-xl hidden sm:flex items-center gap-3 text-left hover:scale-102 transition-transform cursor-pointer"
+            className="absolute top-5 right-5 z-20 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-full border border-slate-200/90 shadow-md hidden sm:flex items-center gap-2.5 hover:scale-102 transition-all cursor-pointer group"
           >
-            <div className="relative w-10 h-10 rounded-xl overflow-hidden ring-1 ring-amber-400 shrink-0">
+            <div className="relative w-6 h-6 rounded-full overflow-hidden ring-1 ring-amber-400 shrink-0">
               <Image
                 src="/images/muni_aditya_blessing_aura.jpg"
                 alt="Muni Aditya Sagar Ji Maharaj"
                 fill
-                sizes="40px"
+                sizes="24px"
                 className="object-cover"
               />
             </div>
-
+            <span className="text-xs font-semibold text-[#172554] group-hover:text-[#2563EB] transition-colors">
+              {lang === "hi" ? "मुनि आदित्य सागर जी की प्रेरणा" : "Inspired by Muni Aditya Sagar Ji"}
+            </span>
           </button>
 
-          {/* Floating Glassmorphism Stat Card over the image */}
-          <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20 bg-white/85 backdrop-blur-xl p-5 rounded-2xl border border-white/60 shadow-lg text-left">
-            <div className="flex items-center gap-2">
+          {/* ================================================================
+              CLEAN FROSTED STAT CARD ON DESKTOP (NO 3D BEVEL, NOT STUFFED)
+          ================================================================ */}
+          <motion.div
+            style={{ y: cardFloatY }}
+            className="hidden sm:flex absolute bottom-6 left-6 z-20 bg-white/95 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-slate-200/90 shadow-xl items-center gap-4 text-left"
+          >
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center shrink-0 border border-blue-100">
               <ShieldCheck className="w-5 h-5 text-[#2563EB]" />
-              <p className="text-sm font-semibold text-[#172554]">
-                {lang === "hi" ? "विश्वसनीय स्वास्थ्य नेटवर्क" : "Trusted Ecosystem"}
-              </p>
             </div>
-            <p className="text-xs text-gray-600 mt-1">
-              {lang === "hi" ? "50,000+ संतुष्ट परिवार" : "50,000+ members joining"}
-            </p>
-          </div>
-
-          {/* Floating Right Pill on Image */}
-          <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-20 bg-white/85 backdrop-blur-xl p-4 rounded-2xl border border-white/60 shadow-lg text-left hidden md:block">
-            <p className="text-xs font-bold text-[#2563EB] uppercase tracking-wider">
-              {lang === "hi" ? "पारदर्शी चिकित्सा" : "Transparent Care"}
-            </p>
-            <p className="text-sm font-bold text-[#172554] mt-0.5">
-              {lang === "hi" ? "शून्य छिपा कमीशन" : "Zero Hidden Commissions"}
-            </p>
-          </div>
+            <div>
+              <div className="text-base font-bold text-[#172554] flex items-center gap-2">
+                <span>50,000+ Families</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <div className="text-xs text-slate-500 font-medium">
+                {lang === "hi" ? "सत्यापित स्वास्थ्य नेटवर्क" : "Trusted Health Ecosystem"}
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
+
+        {/* ================================================================
+            CLEAN MOBILE STAT STRIP (BELOW PHOTO, ZERO FACE OBSTRUCTION)
+        ================================================================ */}
+        <div className="sm:hidden mt-3.5 w-full bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex items-center justify-between text-left">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center shrink-0 border border-blue-100">
+              <ShieldCheck className="w-4 h-4 text-[#2563EB]" />
+            </div>
+            <div>
+              <div className="text-sm font-bold text-[#172554] flex items-center gap-2">
+                <span>50,000+ Families</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <div className="text-[11px] text-slate-500 font-normal">
+                {lang === "hi" ? "सत्यापित विशेषज्ञ डॉक्टर्स व अस्पताल" : "Verified Doctors & Empanelled Hospitals"}
+              </div>
+            </div>
+          </div>
+        </div>
 
       </main>
     </div>
