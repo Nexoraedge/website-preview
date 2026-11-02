@@ -492,7 +492,7 @@ export function MuniVisionModal({ isOpen, onClose }: MuniVisionModalProps) {
 
           <div className="space-y-3">
             <h4 className="text-base font-extrabold text-[#0F172A] flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
+
               <span>The Founding Story & Vision of Abhishek Jain</span>
             </h4>
             <p>

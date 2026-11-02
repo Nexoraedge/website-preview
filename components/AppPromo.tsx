@@ -114,7 +114,7 @@ export default function AppPromo({ lang = "en" }: AppPromoProps) {
 
               {/* 3D Pill Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 border-b-2 border-b-cyan-400 text-cyan-300 text-xs font-bold tracking-wide shadow-md">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+
                 <span>
                   {lang === "hi"
                     ? "आदित्यम् मोबाइल ऐप — स्वास्थ्य सेवा अब आपके हाथ में"

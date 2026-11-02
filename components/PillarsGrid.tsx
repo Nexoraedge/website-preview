@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Stethoscope,
   FlaskConical,
@@ -228,14 +230,22 @@ export default function PillarsGrid({
   const [activeId, setActiveId] = useState("opd");
   const isHi = lang === "hi";
   const sectionRef = useRef<HTMLElement>(null);
+  const router = useRouter();
 
   const handleActionClick = (pillarId: string) => {
     onSelectPillar?.(pillarId);
-    if (pillarId === "opd" || pillarId === "family") {
-      onOpenBooking?.();
+    if (pillarId === "opd") {
+      router.push("/doctors");
+    } else if (pillarId === "labs") {
+      router.push("/diagnostics");
+    } else if (pillarId === "pharmacy") {
+      router.push("/pharmacy");
+    } else if (pillarId === "ipd") {
+      router.push("/hospitals");
+    } else if (pillarId === "family") {
+      router.push("/book");
     } else {
-      const el = document.getElementById(pillarId);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      router.push("/book");
     }
   };
 
@@ -697,14 +707,13 @@ export default function PillarsGrid({
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onOpenBooking}
+          <Link
+            href="/book"
             className="w-full md:w-auto px-7 py-3.5 bg-[#172554] hover:bg-[#2563EB] text-white rounded-full text-xs sm:text-sm font-semibold transition-all shadow-md hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 shrink-0 cursor-pointer relative z-10"
           >
             <span>{isHi ? "रियायती ओपीडी बुक करें" : "Book Discounted OPD"}</span>
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
 
       </div>

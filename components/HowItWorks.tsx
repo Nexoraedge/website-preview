@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Link from "next/link";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Compass,
@@ -281,7 +282,7 @@ export default function HowItWorks({
     <section
       ref={sectionRef}
       id="how-it-works"
-      className="py-24 sm:py-32 font-sans select-none relative text-white overflow-hidden"
+      className="py-24 sm:py-32 font-sans select-none relative text-white overflow-hidden w-full max-w-full"
       style={{
         // Seamless obsidian continuum flowing from DoctorDirectory
         background:
@@ -469,7 +470,7 @@ export default function HowItWorks({
               <div
                 key={step.id}
                 onClick={() => toggleCard(step.id)}
-                className={`step-slab relative w-full sm:w-[350px] lg:w-[360px] rounded-[2.5rem] p-7 transition-all duration-400 cursor-pointer flex flex-col justify-between border-2 border-b-[6px] shadow-2xl ${isOpen
+                className={`step-slab relative w-full sm:w-[calc(50%-1rem)] lg:w-[350px] xl:w-[360px] max-w-[380px] rounded-[2.5rem] p-6 sm:p-7 transition-all duration-400 cursor-pointer flex flex-col justify-between border-2 border-b-[6px] shadow-2xl ${isOpen
                     ? "bg-[#0B1528] border-amber-400 border-b-amber-500 shadow-amber-500/20 scale-[1.02] is-open"
                     : "bg-[#091122] border-[#182745] border-b-[#060D1A] hover:border-slate-500 hover:-translate-y-1"
                   }`}
@@ -577,15 +578,10 @@ export default function HowItWorks({
                       </div>
 
                       {/* CTA Button */}
-                      <button
-                        type="button"
+                      <Link
+                        href={step.id === 3 ? "/join-network" : "/book"}
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (step.id === 3) {
-                            onOpenPartner?.();
-                          } else {
-                            onOpenBooking?.();
-                          }
                         }}
                         className="w-full py-3 px-4 rounded-xl text-slate-950 font-extrabold text-xs tracking-wide shadow-lg border border-amber-300 border-b-[3px] border-b-amber-700 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center gap-2 cursor-pointer"
                         style={{
@@ -594,7 +590,7 @@ export default function HowItWorks({
                       >
                         <span>{actionText}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
+                      </Link>
 
                       <div className="text-center">
                         <span className="text-[10px] text-slate-400 font-medium">
@@ -646,9 +642,8 @@ export default function HowItWorks({
 
           <div className="flex flex-col sm:flex-row items-center gap-3.5 shrink-0 w-full md:w-auto">
             {/* 3D Tactile Amber Button */}
-            <button
-              type="button"
-              onClick={() => onOpenBooking?.()}
+            <Link
+              href="/book"
               className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-b from-[#F59E0B] to-[#D97706] hover:from-[#FBBF24] hover:to-[#F59E0B] text-slate-950 font-extrabold text-xs rounded-xl shadow-lg border border-amber-300 border-b-[4px] border-b-[#92400E] active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Calendar className="w-4 h-4 text-slate-950" />
@@ -658,7 +653,7 @@ export default function HowItWorks({
                   : "Book Consultation"}
               </span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
 
             {/* 3D Tactile Secondary Button */}
             <a

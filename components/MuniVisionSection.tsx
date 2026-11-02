@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Heart,
@@ -16,7 +17,7 @@ import {
 
 interface MuniVisionSectionProps {
   lang?: "en" | "hi";
-  onOpenVision: () => void;
+  onOpenVision?: () => void;
 }
 
 export default function MuniVisionSection({
@@ -225,9 +226,8 @@ export default function MuniVisionSection({
             </div>
 
             {/* Read Discourse Link */}
-            <button
-              type="button"
-              onClick={onOpenVision}
+            <Link
+              href="/vision"
               className="mt-6 text-sm font-semibold text-[#172554] hover:text-[#2563EB] flex items-center gap-2 transition-all hover:gap-3 cursor-pointer group"
             >
               <BookOpen className="w-4 h-4 text-amber-600" />
@@ -237,7 +237,7 @@ export default function MuniVisionSection({
                   : "Read Muni Shri's Full Discourse on Seva"}
               </span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
           </motion.div>
 
           {/* Right Column: Origin Narrative & Leadership with Staggered Parallax */}

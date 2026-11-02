@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
   PhoneCall,
   Mail,
@@ -12,16 +13,10 @@ import {
 } from "lucide-react";
 
 interface FooterProps {
-  onOpenVision?: () => void;
-  onOpenPartner?: () => void;
-  onOpenApp?: () => void;
+  className?: string;
 }
 
-export default function Footer({
-  onOpenVision,
-  onOpenPartner,
-  onOpenApp,
-}: FooterProps) {
+export default function Footer({ className }: FooterProps = {}) {
   return (
     <footer className="bg-[#0B1221] text-white pt-20 relative overflow-hidden font-sans selection:bg-[#2563EB] selection:text-white">
 
@@ -69,11 +64,12 @@ export default function Footer({
               Care Verticals
             </h4>
             <ul className="space-y-3.5 text-sm text-white/60 font-light">
-              <li><a href="#doctors" className="hover:text-white transition-colors">OPD Consultations</a></li>
-              <li><a href="#diagnostics" className="hover:text-white transition-colors">NABL Lab Tests</a></li>
-              <li><a href="#pharmacy" className="hover:text-white transition-colors">Pharmacy Delivery</a></li>
-              <li><a href="#hospitals" className="hover:text-white transition-colors">Partner Hospitals</a></li>
-              <li><a href="#hospitals" className="hover:text-white transition-colors">Satvik Patient Meals</a></li>
+              <li><Link href="/doctors" className="hover:text-white transition-colors">OPD Consultations</Link></li>
+              <li><Link href="/diagnostics" className="hover:text-white transition-colors">NABL Lab Tests</Link></li>
+              <li><Link href="/pharmacy" className="hover:text-white transition-colors">Pharmacy Delivery</Link></li>
+              <li><Link href="/surgeries" className="hover:text-white transition-colors">Planned Surgeries</Link></li>
+              <li><Link href="/hospitals" className="hover:text-white transition-colors">Partner Hospitals</Link></li>
+              <li><Link href="/vision" className="hover:text-white transition-colors">Sacred Vision</Link></li>
             </ul>
           </div>
 
@@ -84,16 +80,43 @@ export default function Footer({
             </h4>
             <ul className="space-y-3.5 text-sm text-white/60 font-light">
               <li>
-                <button onClick={() => onOpenPartner?.()} className="hover:text-white transition-colors">Provider Portal</button>
+                <Link href="/about" className="hover:text-white transition-colors">About & Leadership</Link>
               </li>
               <li>
-                <button onClick={() => onOpenPartner?.()} className="hover:text-white transition-colors">Join as Specialist</button>
+                <Link href="/join-network" className="hover:text-white transition-colors">Provider Portal</Link>
               </li>
               <li>
-                <button onClick={() => onOpenApp?.()} className="hover:text-white transition-colors">Adityam Health Card</button>
+                <Link href="/get-app" className="hover:text-white transition-colors">Download Mobile App</Link>
               </li>
               <li>
-                <a href="#how-it-works" className="hover:text-white transition-colors">Transparency Policy</a>
+                <Link href="/book" className="hover:text-white transition-colors">Book Appointment</Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">Contact & Helplines</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Links: Legal & Trust (Spans 2 cols) */}
+          <div className="lg:col-span-2">
+            <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-6">
+              Trust & Legal
+            </h4>
+            <ul className="space-y-3.5 text-sm text-white/60 font-light">
+              <li>
+                <Link href="/faq" className="hover:text-white transition-colors">Help Center & FAQ</Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+              </li>
+              <li>
+                <Link href="/delete-account" className="hover:text-rose-400 transition-colors">Delete Account</Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">Grievance Officer</Link>
               </li>
             </ul>
           </div>
@@ -153,7 +176,11 @@ export default function Footer({
             <span className="hidden sm:block opacity-30">•</span>
             <span className="hover:text-white/60 transition-colors cursor-default">ISO 27001 Security</span>
             <span className="hidden sm:block opacity-30">•</span>
-            <span className="hover:text-white/60 transition-colors cursor-default">Ethical Oversight</span>
+            <Link href="/privacy" className="hover:text-white/80 transition-colors">Privacy Policy</Link>
+            <span className="hidden sm:block opacity-30">•</span>
+            <Link href="/terms" className="hover:text-white/80 transition-colors">Terms</Link>
+            <span className="hidden sm:block opacity-30">•</span>
+            <Link href="/delete-account" className="hover:text-rose-400 transition-colors">Delete Account</Link>
           </div>
           <div>
             © 2026 Adityam Niramayaa.

@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   PhoneCall,
@@ -15,6 +17,7 @@ import {
   Pill,
   ArrowRight,
   ChevronRight,
+  Compass,
 } from "lucide-react";
 
 interface NavbarProps {
@@ -35,6 +38,15 @@ const CITIES = [
   "Bengaluru",
 ];
 
+const NAV_ITEMS = [
+  { href: "/doctors", labelEn: "Doctors", labelHi: "डॉक्टर्स" },
+  { href: "/diagnostics", labelEn: "Diagnostics", labelHi: "लैब जांच" },
+  { href: "/pharmacy", labelEn: "Pharmacy", labelHi: "दवाइयां" },
+  { href: "/hospitals", labelEn: "Partner Hospitals", labelHi: "सहयोगी अस्पताल" },
+  { href: "/about", labelEn: "About Us", labelHi: "परिचय" },
+  { href: "/vision", labelEn: "Sacred Vision", labelHi: "प्रेरणा", isVision: true },
+];
+
 export default function Navbar({
   lang = "en",
   onToggleLang,
@@ -43,8 +55,19 @@ export default function Navbar({
   onOpenApp,
   onOpenVision,
 }: NavbarProps) {
+  const pathname = usePathname();
   const [selectedCity, setSelectedCity] = useState("Jaipur");
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+
+  const handleToggleLang = (newLang: "en" | "hi") => {
+    try {
+      localStorage.setItem("adityam_lang", newLang);
+      window.dispatchEvent(new CustomEvent("adityam_lang_change", { detail: newLang }));
+    } catch {
+      // Ignore
+    }
+    onToggleLang?.(newLang);
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Lock background scroll when mobile menu is open
@@ -59,11 +82,15 @@ export default function Navbar({
     };
   }, [isMobileMenuOpen]);
 
-  const handleNavClick = (anchor: string) => {
+  const handleNavClick = (pathOrAnchor: string) => {
     setIsMobileMenuOpen(false);
-    const el = document.querySelector(anchor);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (pathOrAnchor.startsWith("/")) {
+      window.location.href = pathOrAnchor;
+    } else {
+      const el = document.querySelector(pathOrAnchor);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
 
@@ -129,61 +156,72 @@ export default function Navbar({
       {/* Main Desktop & Tablet Navbar */}
       <div className="w-full relative border-b border-[#172554]/80 flex items-stretch">
         {/* LEFT SECTION: White Curved Brand Tab */}
-        <div
-          className="bg-white relative z-10 flex items-center justify-center rounded-br-[2rem] sm:rounded-br-[2.5rem] md:rounded-br-[3.5rem] shadow-[4px_0_20px_rgba(0,0,0,0.1)] px-3.5 sm:px-6 md:pr-10 shrink-0"
-          style={{ paddingLeft: "max(1rem, calc((100% - 80rem) / 2))" }}
-        >
-          <a href="#" className="flex items-center gap-2.5 sm:gap-3 py-2 sm:py-3">
-            <div className="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-white overflow-hidden shrink-0">
+        <div className="bg-white relative z-10 flex items-center justify-center rounded-br-[2rem] sm:rounded-br-[2.5rem] md:rounded-br-[3.5rem] shadow-[4px_0_20px_rgba(0,0,0,0.1)] px-3 sm:px-5 md:pr-6 xl:pr-10 shrink-0">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 py-2 sm:py-2.5">
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white overflow-hidden shrink-0">
               <Image
                 src="/images/logo-an.png"
                 alt="Adityam Niramayaa Logo"
                 fill
-                sizes="48px"
+                sizes="40px"
                 className="object-contain scale-110"
                 priority
               />
             </div>
             <div className="flex flex-col justify-center">
-              <span className="text-sm sm:text-lg md:text-xl font-bold tracking-tight text-[#172554] leading-tight">
+              <span className="text-sm sm:text-base xl:text-lg font-bold tracking-tight text-[#172554] leading-tight">
                 Adityam Niramayaa
               </span>
               <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium tracking-wider uppercase leading-none mt-0.5">
                 {lang === "hi" ? "आदित्यम् निरामया — सबके लिए" : "Healthcare for Everyone"}
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         {/* RIGHT SECTION: Blue Background + Nav Links + Language + Action CTAs */}
-        <div
-          className="flex-1 flex items-center justify-end lg:justify-between py-2 sm:py-3 pl-3 md:pl-8 pr-3 sm:pr-6"
-          style={{ paddingRight: "max(1rem, calc((100% - 80rem) / 2))" }}
-        >
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-7 text-[13px] font-semibold text-blue-50/90">
-            <a href="#doctors" className="hover:text-white transition-colors">
-              {lang === "hi" ? "डॉक्टर्स" : "Doctors"}
-            </a>
-            <a href="#diagnostics" className="hover:text-white transition-colors">
-              {lang === "hi" ? "लैब जांच" : "Diagnostics"}
-            </a>
-            <a href="#pharmacy" className="hover:text-white transition-colors">
-              {lang === "hi" ? "दवाइयां" : "Pharmacy"}
-            </a>
-            <a href="#hospitals" className="hover:text-white transition-colors">
-              {lang === "hi" ? "सहयोगी अस्पताल" : "Partner Hospitals"}
-            </a>
+        <div className="flex-1 flex items-center justify-end lg:justify-between py-2 sm:py-2.5 pl-3 md:pl-5 xl:pl-8 pr-3 sm:pr-4 xl:pr-8 min-w-0">
+          {/* Desktop Nav Links with Clean, Premium Active Indicators (No Bounce) */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 text-xs xl:text-[13px] font-semibold text-blue-50/90 whitespace-nowrap">
+            {NAV_ITEMS.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(item.href));
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative px-3 py-1.5 rounded-lg text-xs xl:text-[13px] font-semibold transition-colors duration-150 flex items-center gap-1.5 ${
+                    isActive
+                      ? item.isVision
+                        ? "text-amber-300 font-bold bg-white/10"
+                        : "text-white font-bold bg-white/10"
+                      : item.isVision
+                      ? "text-amber-200/90 hover:text-amber-300 hover:bg-white/5"
+                      : "text-blue-100/75 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  {item.isVision && <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+                  <span>{lang === "hi" ? item.labelHi : item.labelEn}</span>
+
+                  {/* Clean, Sharp Active Bar (Zero Bounce, Understated & Authoritative) */}
+                  {isActive && (
+                    <span className="absolute -bottom-2 left-2 right-2 h-[2px] bg-amber-400 rounded-full shadow-[0_1px_6px_rgba(251,191,36,0.5)] pointer-events-none" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Action Area */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 xl:gap-3 shrink-0">
             {/* Language Toggle */}
-            <div className="flex items-center bg-white/10 backdrop-blur-md rounded-full p-0.5 border border-white/20 text-[11px] font-bold">
+            <div className="flex items-center bg-white/10 backdrop-blur-md rounded-full p-0.5 border border-white/20 text-[10px] xl:text-[11px] font-bold">
               <button
                 type="button"
-                onClick={() => onToggleLang?.("en")}
-                className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
+                onClick={() => handleToggleLang("en")}
+                className={`px-2 xl:px-2.5 py-0.5 xl:py-1 rounded-full transition-all cursor-pointer ${
                   lang === "en"
                     ? "bg-amber-400 text-slate-950 font-black shadow-xs"
                     : "text-white/80 hover:text-white"
@@ -193,8 +231,8 @@ export default function Navbar({
               </button>
               <button
                 type="button"
-                onClick={() => onToggleLang?.("hi")}
-                className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
+                onClick={() => handleToggleLang("hi")}
+                className={`px-2 xl:px-2.5 py-0.5 xl:py-1 rounded-full transition-all cursor-pointer ${
                   lang === "hi"
                     ? "bg-amber-400 text-slate-950 font-black shadow-xs"
                     : "text-white/80 hover:text-white"
@@ -204,25 +242,31 @@ export default function Navbar({
               </button>
             </div>
 
-            {/* Desktop Join Partner CTA */}
-            <button
-              type="button"
-              onClick={onOpenPartner}
-              className="hidden md:flex px-4 py-2 text-xs font-semibold text-white/90 hover:text-white border border-white/20 hover:bg-white/10 rounded-full transition-all items-center gap-1.5 cursor-pointer"
+            {/* Desktop Join Partner CTA (Links to Dedicated Page) */}
+            <Link
+              href="/join-network"
+              className={`hidden xl:flex px-4 py-2 text-xs font-semibold rounded-full transition-all items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                pathname === "/join-network"
+                  ? "bg-amber-400 text-slate-950 font-bold border border-amber-400 shadow-sm"
+                  : "text-white/90 hover:text-white border border-white/20 hover:bg-white/10"
+              }`}
             >
               <Building2 className="w-3.5 h-3.5" />
               <span>{lang === "hi" ? "नेटवर्क से जुड़ें" : "Join Network"}</span>
-            </button>
+            </Link>
 
-            {/* Desktop App Download CTA */}
-            <button
-              type="button"
-              onClick={onOpenApp}
-              className="hidden md:flex px-5 py-2 text-xs font-bold text-[#172554] bg-white hover:bg-blue-50 rounded-full shadow-md transition-all items-center gap-1.5 cursor-pointer"
+            {/* App Download CTA (Links to Dedicated Page) */}
+            <Link
+              href="/get-app"
+              className={`hidden sm:flex px-3.5 xl:px-5 py-1.5 xl:py-2 text-xs font-bold text-[#172554] bg-white hover:bg-blue-50 rounded-full shadow-sm transition-all items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                pathname === "/get-app"
+                  ? "ring-2 ring-amber-400 font-black"
+                  : ""
+              }`}
             >
               <Smartphone className="w-3.5 h-3.5 text-[#172554]" />
               <span>{lang === "hi" ? "ऐप डाउनलोड" : "Get App"}</span>
-            </button>
+            </Link>
 
             {/* Mobile Animated SVG Hamburger */}
             <div className="lg:hidden flex items-center">
@@ -323,7 +367,7 @@ export default function Navbar({
                 <div className="flex items-center bg-white/10 rounded-full p-0.5 border border-white/20 text-[10px] font-bold">
                   <button
                     type="button"
-                    onClick={() => onToggleLang?.("en")}
+                    onClick={() => handleToggleLang("en")}
                     className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${
                       lang === "en"
                         ? "bg-amber-400 text-slate-950 font-black shadow-xs"
@@ -334,7 +378,7 @@ export default function Navbar({
                   </button>
                   <button
                     type="button"
-                    onClick={() => onToggleLang?.("hi")}
+                    onClick={() => handleToggleLang("hi")}
                     className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${
                       lang === "hi"
                         ? "bg-amber-400 text-slate-950 font-black shadow-xs"
@@ -369,17 +413,28 @@ export default function Navbar({
               {/* Item 1: Doctors */}
               <button
                 type="button"
-                onClick={() => handleNavClick("#doctors")}
-                className="w-full bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all active:scale-99 flex items-center justify-between text-left group cursor-pointer"
+                onClick={() => handleNavClick("/doctors")}
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
+                  pathname === "/doctors"
+                    ? "border-[#2563EB] bg-blue-50/50 ring-2 ring-[#2563EB]/20 shadow-sm"
+                    : "border-slate-200/90 shadow-2xs hover:shadow-md"
+                }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center shrink-0">
                     <Stethoscope className="w-5 h-5 text-[#2563EB]" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#2563EB] transition-colors">
-                      {lang === "hi" ? "डॉक्टर्स एवं ओपीडी" : "Doctors & Consultations"}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#2563EB] transition-colors">
+                        {lang === "hi" ? "डॉक्टर्स एवं ओपीडी" : "Doctors & Consultations"}
+                      </h4>
+                      {pathname === "/doctors" && (
+                        <span className="px-2 py-0.5 rounded-full bg-[#172554] text-amber-300 text-[9px] font-black">
+                          {lang === "hi" ? "सक्रिय" : "Active"}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[11px] text-slate-500 font-normal mt-0.5">
                       {lang === "hi" ? "वरिष्ठ एमडी एवं सुपर-स्पेशलिस्ट" : "Priority specialist appointments"}
                     </p>
@@ -391,17 +446,28 @@ export default function Navbar({
               {/* Item 2: Diagnostics */}
               <button
                 type="button"
-                onClick={() => handleNavClick("#diagnostics")}
-                className="w-full bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all active:scale-99 flex items-center justify-between text-left group cursor-pointer"
+                onClick={() => handleNavClick("/diagnostics")}
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
+                  pathname === "/diagnostics"
+                    ? "border-emerald-500 bg-emerald-50/50 ring-2 ring-emerald-500/20 shadow-sm"
+                    : "border-slate-200/90 shadow-2xs hover:shadow-md"
+                }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
                     <FlaskConical className="w-5 h-5 text-emerald-600" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
-                      {lang === "hi" ? "प्रमाणित लैब जांच" : "Accredited Lab Tests"}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
+                        {lang === "hi" ? "प्रमाणित लैब जांच" : "Accredited Lab Tests"}
+                      </h4>
+                      {pathname === "/diagnostics" && (
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-700 text-white text-[9px] font-black">
+                          {lang === "hi" ? "सक्रिय" : "Active"}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[11px] text-slate-500 font-normal mt-0.5">
                       {lang === "hi" ? "100% सटीक जांच एवं होम सैंपल" : "NABL certified home sample pickup"}
                     </p>
@@ -413,17 +479,28 @@ export default function Navbar({
               {/* Item 3: Pharmacy */}
               <button
                 type="button"
-                onClick={() => handleNavClick("#pharmacy")}
-                className="w-full bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all active:scale-99 flex items-center justify-between text-left group cursor-pointer"
+                onClick={() => handleNavClick("/pharmacy")}
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
+                  pathname === "/pharmacy"
+                    ? "border-amber-500 bg-amber-50/50 ring-2 ring-amber-500/20 shadow-sm"
+                    : "border-slate-200/90 shadow-2xs hover:shadow-md"
+                }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0">
                     <Pill className="w-5 h-5 text-amber-600" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
-                      {lang === "hi" ? "दवा बचत व डिलीवरी" : "Prescription Pharmacy"}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
+                        {lang === "hi" ? "दवा बचत व डिलीवरी" : "Prescription Pharmacy"}
+                      </h4>
+                      {pathname === "/pharmacy" && (
+                        <span className="px-2 py-0.5 rounded-full bg-amber-600 text-white text-[9px] font-black">
+                          {lang === "hi" ? "सक्रिय" : "Active"}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[11px] text-slate-500 font-normal mt-0.5">
                       {lang === "hi" ? "100% असली दवाइयां, रियायती दरें" : "Genuine medicines with direct savings"}
                     </p>
@@ -435,17 +512,28 @@ export default function Navbar({
               {/* Item 4: Partner Hospitals */}
               <button
                 type="button"
-                onClick={() => handleNavClick("#hospitals")}
-                className="w-full bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all active:scale-99 flex items-center justify-between text-left group cursor-pointer"
+                onClick={() => handleNavClick("/hospitals")}
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
+                  pathname === "/hospitals"
+                    ? "border-indigo-500 bg-indigo-50/50 ring-2 ring-indigo-500/20 shadow-sm"
+                    : "border-slate-200/90 shadow-2xs hover:shadow-md"
+                }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0">
                     <Building2 className="w-5 h-5 text-indigo-600" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                      {lang === "hi" ? "सहयोगी अस्पताल" : "Partner Hospitals Network"}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                        {lang === "hi" ? "सहयोगी अस्पताल" : "Partner Hospitals Network"}
+                      </h4>
+                      {pathname === "/hospitals" && (
+                        <span className="px-2 py-0.5 rounded-full bg-indigo-700 text-white text-[9px] font-black">
+                          {lang === "hi" ? "सक्रिय" : "Active"}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[11px] text-slate-500 font-normal mt-0.5">
                       {lang === "hi" ? "कैशलेस टीपीए व सात्विक भोजन" : "Cashless TPA hospital empanelment"}
                     </p>
@@ -454,23 +542,64 @@ export default function Navbar({
                 <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
               </button>
 
-              {/* Item 5: Sacred Vision */}
+              {/* Item 5: About Us & Leadership */}
               <button
                 type="button"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  onOpenVision?.();
-                }}
-                className="w-full bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-white p-4 rounded-2xl border border-amber-300/80 shadow-2xs hover:border-amber-400 transition-all active:scale-99 flex items-center justify-between text-left group cursor-pointer"
+                onClick={() => handleNavClick("/about")}
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
+                  pathname === "/about"
+                    ? "border-[#2563EB] bg-blue-50/50 ring-2 ring-[#2563EB]/20 shadow-sm"
+                    : "border-slate-200/90 shadow-2xs hover:shadow-md"
+                }`}
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center shrink-0">
+                    <Compass className="w-5 h-5 text-[#2563EB]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#2563EB] transition-colors">
+                        {lang === "hi" ? "परिचय एवं नेतृत्व" : "About & Leadership"}
+                      </h4>
+                      {pathname === "/about" && (
+                        <span className="px-2 py-0.5 rounded-full bg-[#172554] text-amber-300 text-[9px] font-black">
+                          {lang === "hi" ? "सक्रिय" : "Active"}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-normal mt-0.5">
+                      {lang === "hi" ? "मुनि श्री की प्रेरणा एवं मेडिकल बोर्ड" : "Founding origin & medical board"}
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#2563EB] transition-colors" />
+              </button>
+
+              {/* Item 6: Sacred Vision */}
+              <button
+                type="button"
+                onClick={() => handleNavClick("/vision")}
+                className={`w-full bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
+                  pathname === "/vision"
+                    ? "border-amber-400 ring-2 ring-amber-400/30 shadow-sm"
+                    : "border-amber-300/80 shadow-2xs hover:border-amber-400"
+                }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-700 border border-amber-400/40 flex items-center justify-center shrink-0">
                     <Sparkles className="w-5 h-5 text-amber-600" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-amber-900 group-hover:text-amber-950 transition-colors">
-                      {lang === "hi" ? "मुनि श्री की प्रेरणा" : "Sacred Vision & Origin"}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-amber-900 group-hover:text-amber-950 transition-colors">
+                        {lang === "hi" ? "मुनि श्री की प्रेरणा" : "Sacred Vision & Origin"}
+                      </h4>
+                      {pathname === "/vision" && (
+                        <span className="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[9px] font-black">
+                          {lang === "hi" ? "सक्रिय" : "Active"}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[11px] text-amber-800/80 font-normal mt-0.5">
                       {lang === "hi" ? "निःस्वार्थ व पारदर्शी स्वास्थ्य सेवा" : "Universal compassion & transparent care"}
                     </p>
@@ -483,32 +612,26 @@ export default function Navbar({
             {/* Bottom Actions: Clean, High-Contrast CTAs */}
             <div className="p-4 bg-white border-t border-slate-200/90 space-y-3 shrink-0 shadow-lg">
               {/* Primary App Download Button */}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  onOpenApp?.();
-                }}
-                className="w-full py-3.5 text-xs font-black text-slate-950 bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+              <Link
+                href="/get-app"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full py-3.5 text-xs font-black text-slate-950 bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Smartphone className="w-4 h-4 text-slate-950" />
                 <span>{lang === "hi" ? "मोबाइल ऐप डाउनलोड करें" : "Download Mobile App"}</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
 
               {/* Secondary Row: Partner Empanelment & Emergency SOS */}
               <div className="flex items-center justify-between text-xs pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    onOpenPartner?.();
-                  }}
+                <Link
+                  href="/join-network"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className="font-bold text-[#2563EB] hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Building2 className="w-3.5 h-3.5" />
                   <span>{lang === "hi" ? "अस्पताल संबद्धता" : "Partner Empanelment"}</span>
-                </button>
+                </Link>
 
                 <a
                   href="tel:18002081008"

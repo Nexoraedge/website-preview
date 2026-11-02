@@ -3,6 +3,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { supabase } from "@/lib/supabase";
+import {
+  translateDoctorName,
+  translateSpecialty,
+  translateQualification,
+  translateHospitalName,
+  translateCity,
+  translateTiming,
+} from "@/lib/hindiDictionary";
 import {
   Stethoscope,
   Star,
@@ -61,6 +70,46 @@ interface Hospital {
   image: string;
   featuresEn: string[];
   featuresHi: string[];
+}
+
+interface SupabaseDocRecord {
+  id: string;
+  name: string;
+  name_hi?: string;
+  qualification?: string;
+  qualification_hi?: string;
+  specialty?: string;
+  specialty_hi?: string;
+  experience_years?: number;
+  consultation_fee?: number;
+  discounted_fee?: number;
+  opd_timing?: string;
+  avatar_url?: string;
+  rating?: number;
+  total_reviews?: number;
+  hospitals?: {
+    name?: string;
+    name_hi?: string;
+    city?: string;
+    city_hi?: string;
+  } | null;
+}
+
+interface SupabaseHospRecord {
+  id: string;
+  name: string;
+  name_hi?: string;
+  city?: string;
+  city_hi?: string;
+  total_beds?: number;
+  specialties?: string[];
+  tag?: string;
+  tag_hi?: string;
+  nabh_accredited?: boolean;
+  rating?: number;
+  total_reviews?: number;
+  image_url?: string;
+  facilities?: string[];
 }
 
 const DOCTORS: Doctor[] = [
@@ -333,18 +382,107 @@ export default function DoctorDirectory({
   // Independent expand states for Track 1 (Doctors) and Track 2 (Hospitals)
   const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
   const [expandedHospId, setExpandedHospId] = useState<string | null>(null);
+  const [doctorsList, setDoctorsList] = useState<Doctor[]>(DOCTORS);
+  const [hospitalsList, setHospitalsList] = useState<Hospital[]>(HOSPITALS);
 
   const autoCollapseDocTimerRef = useRef<NodeJS.Timeout | null>(null);
   const autoCollapseHospTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Fetch live doctors & hospitals from Supabase with smooth fallback
+  useEffect(() => {
+    let isMounted = true;
+    async function loadLiveSupabaseData() {
+      try {
+        const [docsRes, hospRes] = await Promise.all([
+          supabase
+            .from("doctors")
+            .select("*, hospitals(name, city, state, address)")
+            .eq("is_active", true)
+            .order("rating", { ascending: false })
+            .limit(10),
+          supabase
+            .from("hospitals")
+            .select("*")
+            .eq("is_active", true)
+            .order("rating", { ascending: false })
+            .limit(10),
+        ]);
+
+        if (isMounted && docsRes.data && docsRes.data.length > 0) {
+          const mappedDocs: Doctor[] = (docsRes.data as unknown as SupabaseDocRecord[]).map((d) => ({
+            id: d.id,
+            nameEn: d.name,
+            nameHi: translateDoctorName(d.name, d.name_hi, "hi"),
+            degreesEn: d.qualification || "MBBS, MD",
+            degreesHi: d.qualification_hi || translateQualification(d.qualification, undefined, "hi"),
+            specialtyEn: d.specialty || "Specialist",
+            specialtyHi: d.specialty_hi || translateSpecialty(d.specialty, undefined, "hi"),
+            category: d.specialty || "General",
+            experienceEn: `${d.experience_years || 10}+ Yrs Exp`,
+            experienceHi: `${d.experience_years || 10}+ वर्ष अनुभव`,
+            hospitalEn: d.hospitals?.name || "Empanelled Network Hospital",
+            hospitalHi: d.hospitals?.name_hi || translateHospitalName(d.hospitals?.name, undefined, "hi"),
+            locationEn: d.hospitals?.city || "Delhi NCR",
+            locationHi: d.hospitals?.city_hi || translateCity(d.hospitals?.city, undefined, "hi"),
+            rating: d.rating || 5,
+            reviewsCount: d.total_reviews || 120,
+            originalFee: d.consultation_fee || 1000,
+            discountedFee: d.discounted_fee || 750,
+            nextSlotEn: d.opd_timing || "Today, 4:30 PM",
+            nextSlotHi: translateTiming(d.opd_timing || "Today, 4:30 PM", undefined, "hi"),
+            image: d.avatar_url || "/images/doctor_rajesh.jpg",
+          }));
+          setDoctorsList(mappedDocs);
+        }
+
+        if (isMounted && hospRes.data && hospRes.data.length > 0) {
+          const mappedHosps: Hospital[] = (hospRes.data as unknown as SupabaseHospRecord[]).map((h) => ({
+            id: h.id,
+            nameEn: h.name,
+            nameHi: translateHospitalName(h.name, h.name_hi, "hi"),
+            cityEn: h.city || "Delhi NCR",
+            cityHi: translateCity(h.city, h.city_hi, "hi"),
+            bedsEn: `${h.total_beds || 200}+ Beds`,
+            bedsHi: `${h.total_beds || 200}+ बेड्स`,
+            specialtiesEn: (h.specialties || ["Multispeciality"]).join(", "),
+            specialtiesHi: (h.specialties || ["मल्टीस्पेशलिटी"]).map(s => translateSpecialty(s, undefined, "hi")).join(", "),
+            tagEn: h.tag || (h.nabh_accredited ? "NABH Accredited" : "Verified Partner"),
+            tagHi: h.tag_hi || (h.nabh_accredited ? "एनएबीएच मान्यता" : "सत्यापित अस्पताल"),
+            rating: h.rating || 5,
+            reviewsCount: h.total_reviews || 300,
+            image: h.image_url || "/images/hospital_arihant.jpg",
+            featuresEn: h.facilities || [
+              "24/7 Cath Lab & Advanced ICU",
+              "Direct Institutional Concession",
+              "Zero Hidden Middleman Fees",
+              "Priority Bed Allocation",
+            ],
+            featuresHi: h.facilities || [
+              "24/7 कैथ लैब व उन्नत आईसीयू",
+              "सीधा संस्थागत रियायती लाभ",
+              "शून्य गुप्त या मध्यस्थ शुल्क",
+              "प्राथमिकता से बेड उपलब्धता",
+            ],
+          }));
+          setHospitalsList(mappedHosps);
+        }
+      } catch (err) {
+        console.warn("Using fallback directory data:", err);
+      }
+    }
+
+    loadLiveSupabaseData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Duplicated arrays for seamless infinite marquee scroll (50/50 symmetry)
-  const marqueeDoctors = [...DOCTORS, ...DOCTORS];
-  const marqueeHospitals = [
-    ...HOSPITALS,
-    ...HOSPITALS,
-    ...HOSPITALS,
-    ...HOSPITALS,
-  ];
+  const marqueeDoctors = [...doctorsList, ...doctorsList];
+  const marqueeHospitals =
+    hospitalsList.length < 4
+      ? [...hospitalsList, ...hospitalsList, ...hospitalsList, ...hospitalsList]
+      : [...hospitalsList, ...hospitalsList];
 
   // Handle Doctor Card Click:
   const handleDocCardClick = (instanceKey: string) => {
@@ -472,6 +610,8 @@ export default function DoctorDirectory({
           will-change: transform;
         }
 
+        .doctor-marquee-track:hover,
+        .hospital-marquee-track:hover,
         .doctor-marquee-track.is-paused,
         .hospital-marquee-track.is-paused {
           animation-play-state: paused;
@@ -1015,7 +1155,11 @@ export default function DoctorDirectory({
                             clearTimeout(autoCollapseDocTimerRef.current);
                             autoCollapseDocTimerRef.current = null;
                           }
-                          onOpenBooking?.(docName, docSpecialty);
+                          if (onOpenBooking) {
+                            onOpenBooking(docName, docSpecialty);
+                          } else {
+                            window.location.href = `/book?service=${encodeURIComponent(docName)}&specialty=${encodeURIComponent(docSpecialty)}`;
+                          }
                         }}
                         className="w-full py-2.5 px-4 bg-[#F59E0B] hover:bg-[#D97706] active:scale-[0.98] text-[#0F172A] hover:text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                       >
@@ -1218,7 +1362,11 @@ export default function DoctorDirectory({
                             clearTimeout(autoCollapseHospTimerRef.current);
                             autoCollapseHospTimerRef.current = null;
                           }
-                          onOpenBooking?.(hospName, "Hospital Admission");
+                          if (onOpenBooking) {
+                            onOpenBooking(hospName, "Hospital Admission");
+                          } else {
+                            window.location.href = `/book?service=${encodeURIComponent(hospName)}&specialty=Hospital+Admission`;
+                          }
                         }}
                         className="w-full py-2.5 px-4 bg-[#F59E0B] hover:bg-[#D97706] active:scale-[0.98] text-[#0F172A] hover:text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                       >

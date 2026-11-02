@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import Link from "next/link";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Building2,
@@ -196,9 +197,8 @@ export default function PartnerCTA({
 
               {/* 3D Action Buttons */}
               <div className="pt-3 flex flex-wrap items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => onOpenPartner?.()}
+                <Link
+                  href="/join-network"
                   className="px-8 py-4 bg-gradient-to-b from-[#F59E0B] to-[#D97706] hover:from-[#FBBF24] hover:to-[#F59E0B] text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-xl border border-amber-300 border-b-[4px] border-b-[#92400E] active:border-b-0 active:translate-y-1 transition-all flex items-center gap-2.5 cursor-pointer"
                 >
                   <Building2 className="w-4 h-4 text-slate-950" />
@@ -208,7 +208,7 @@ export default function PartnerCTA({
                       : "Register Your Hospital / Clinic"}
                   </span>
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Link>
 
                 <div className="text-xs text-slate-300 flex items-center gap-2 font-medium">
                   <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />

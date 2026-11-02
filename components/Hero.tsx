@@ -2,6 +2,7 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   ArrowRight,
@@ -122,22 +123,20 @@ export default function Hero({
           transition={{ duration: 0.7, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 mt-8 sm:mt-10 w-full sm:w-auto"
         >
-          <button
-            type="button"
-            onClick={onOpenApp}
+          <Link
+            href="/get-app"
             className="flex items-center justify-center gap-2 bg-[#172554] text-white px-8 py-4 rounded-full text-base font-medium hover:bg-[#2563EB] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
           >
             <span>{lang === "hi" ? "ऐप डाउनलोड करें" : "Download the App"}</span>
             <ArrowRight className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={onOpenPartner}
+          </Link>
+          <Link
+            href="/join-network"
             className="flex items-center justify-center gap-2 bg-white border border-gray-200 text-[#172554] px-8 py-4 rounded-full text-base font-medium hover:bg-gray-50 transition-all shadow-sm cursor-pointer"
           >
             <Building2 className="w-4 h-4 text-[#2563EB]" />
             <span>{lang === "hi" ? "प्रदाता नेटवर्क से जुड़ें" : "Join Provider Network"}</span>
-          </button>
+          </Link>
         </motion.div>
 
         {/* =========================================================================
@@ -202,9 +201,8 @@ export default function Hero({
           <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-slate-900/35 via-transparent to-transparent pointer-events-none z-10" />
 
           {/* Top-Right Sacred Inspiration Pill (Desktop Only, Subtle & Light) */}
-          <button
-            type="button"
-            onClick={onOpenVision}
+          <Link
+            href="/vision"
             className="absolute top-5 right-5 z-20 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-full border border-slate-200/90 shadow-md hidden sm:flex items-center gap-2.5 hover:scale-102 transition-all cursor-pointer group"
           >
             <div className="relative w-6 h-6 rounded-full overflow-hidden ring-1 ring-amber-400 shrink-0">
@@ -219,7 +217,7 @@ export default function Hero({
             <span className="text-xs font-semibold text-[#172554] group-hover:text-[#2563EB] transition-colors">
               {lang === "hi" ? "मुनि आदित्य सागर जी की प्रेरणा" : "Inspired by Muni Aditya Sagar Ji"}
             </span>
-          </button>
+          </Link>
 
           {/* ================================================================
               CLEAN FROSTED STAT CARD ON DESKTOP (NO 3D BEVEL, NOT STUFFED)
