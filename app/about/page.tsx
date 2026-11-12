@@ -8,111 +8,18 @@ import {
   Heart,
   Sparkles,
   Award,
-  Users,
-  CheckCircle2,
   Building2,
   ArrowRight,
-  PhoneCall,
-  Stethoscope,
   HeartHandshake,
   TrendingDown,
-  Clock,
   Compass,
   FileCheck2,
-  ChevronRight,
   Quote,
-  Target,
-  Shield,
   User,
-  Landmark,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/lib/useLanguage";
-
-interface BoardMember {
-  id: string;
-  nameEn: string;
-  nameHi: string;
-  roleEn: string;
-  roleHi: string;
-  specialtyEn: string;
-  specialtyHi: string;
-  experienceEn: string;
-  experienceHi: string;
-  bioEn: string;
-  bioHi: string;
-  image: string;
-  hospitalEn: string;
-  hospitalHi: string;
-}
-
-const MEDICAL_BOARD: BoardMember[] = [
-  {
-    id: "lead-1",
-    nameEn: "Dr. Satish Jain",
-    nameHi: "डॉ. सतीश जैन",
-    roleEn: "Chief Medical Advisor & Cardiology Lead",
-    roleHi: "मुख्य चिकित्सा सलाहकार एवं कार्डियोलॉजी प्रमुख",
-    specialtyEn: "MD, DM (Cardiology), FACC",
-    specialtyHi: "एमडी, डीएम (हृदय रोग विशेषज्ञ)",
-    experienceEn: "24+ Years Clinical Practice",
-    experienceHi: "२४+ वर्षों का वरिष्ठ अनुभव",
-    bioEn: "Pioneer in ethical interventional cardiology. Spearheads clinical audit protocols ensuring zero unnecessary stents or procedures.",
-    bioHi: "नैतिक कार्डियोलॉजी के अग्रणी विशेषज्ञ। नैदानिक ऑडिट और अनावश्यक सर्जरी की रोकथाम के प्रोटोकॉल प्रमुख।",
-    image: "/images/doctor_amitesh.jpg",
-    hospitalEn: "Apex Heart & Vascular Institute",
-    hospitalHi: "एपेक्स हार्ट एंड वैस्कुलर इंस्टीट्यूट",
-  },
-  {
-    id: "lead-2",
-    nameEn: "Dr. Rashmi Sethi",
-    nameHi: "डॉ. रश्मि सेठी",
-    roleEn: "Women's Health & Clinical Governance Advisor",
-    roleHi: "महिला स्वास्थ्य एवं क्लिनिकल गवर्नेंस सलाहकार",
-    specialtyEn: "MS (Obs & Gynae), DGO, FICOG",
-    specialtyHi: "एमएस (प्रसूति एवं स्त्री रोग), डीजीओ",
-    experienceEn: "19+ Years Practice",
-    experienceHi: "१९+ वर्षों का मातृत्व अनुभव",
-    bioEn: "Renowned advocate for natural birthing and affordable gynecological surgical care across empanelled hospitals.",
-    bioHi: "सहयोगी अस्पतालों में सुरक्षित मातृत्व, सामान्य प्रसव और रियायती सर्जिकल देखभाल की मुखर समर्थक।",
-    image: "/images/doctor_priya.jpg",
-    hospitalEn: "Mahaveer Multispecialty Hospital",
-    hospitalHi: "महावीर मल्टीस्पेशलिटी हॉस्पिटल",
-  },
-  {
-    id: "lead-3",
-    nameEn: "Dr. Alok Mehta",
-    nameHi: "डॉ. आलोक मेहता",
-    roleEn: "Joint Replacement & Spine Surgery Lead",
-    roleHi: "जोड़ प्रत्यारोपण एवं स्पाइन सर्जरी प्रमुख",
-    specialtyEn: "MS (Ortho), MCh (Joint Replacement)",
-    specialtyHi: "एमएस (ऑर्थो), एमसीएच",
-    experienceEn: "21+ Years Orthopedic Practice",
-    experienceHi: "२१+ वर्षों का आर्थोपेडिक अनुभव",
-    bioEn: "Specializes in minimally invasive robotics and transparent packaged pricing for knee, hip, and spine surgeries.",
-    bioHi: "घुटने और कूल्हे के प्रत्यारोपण में पारदर्शी रियायती पैकेज और उन्नत रोबोटिक सर्जरी के मार्गदर्शक।",
-    image: "/images/doctor_Rajesh.jpg",
-    hospitalEn: "Jain Orthopedic & Spine Center",
-    hospitalHi: "जैन ऑर्थोपेडिक एवं स्पाइन सेंटर",
-  },
-  {
-    id: "lead-4",
-    nameEn: "Dr. Pradeep Kasliwal",
-    nameHi: "डॉ. प्रदीप कासलीवाल",
-    roleEn: "Internal Medicine & ICU Ethics Advisor",
-    roleHi: "आंतरिक चिकित्सा एवं आईसीयू एथिक्स सलाहकार",
-    specialtyEn: "MD (Internal Medicine), Critical Care",
-    specialtyHi: "एमडी (मेडिसिन), क्रिटिकल केयर विशेषज्ञ",
-    experienceEn: "22+ Years Practice",
-    experienceHi: "२२+ वर्षों का सघन अनुभव",
-    bioEn: "Oversees the 'Hospital Buddy' on-ground support protocol and transparent ICU billing verifications for admitted patients.",
-    bioHi: "भर्ती मरीजों हेतु 'अस्पताल मित्र' सहायता कार्यक्रम और निष्पक्ष आईसीयू बिलिंग समीक्षा के प्रभारी।",
-    image: "/images/doctor_harish.jpg",
-    hospitalEn: "Arihant Super Speciality Care",
-    hospitalHi: "अरिहंत सुपर स्पेशलिटी केयर",
-  },
-];
 
 export default function AboutPage() {
   const [lang, setLang] = useLanguage();
@@ -558,92 +465,7 @@ export default function AboutPage() {
         </section>
 
         {/* ====================================================================
-            6. MEDICAL ADVISORY BOARD & CLINICAL GOVERNANCE
-        ==================================================================== */}
-        <section className="py-12 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-10">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100 mb-2.5">
-                <Stethoscope className="w-3.5 h-3.5 text-blue-600" />
-                <span>{isHi ? "वरिष्ठ चिकित्सा सलाहकार मंडल" : "Clinical Advisory Board"}</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#0A1128]">
-                {isHi ? "अग्रणी वरिष्ठ चिकित्सकों द्वारा मार्गदर्शित" : "Governed by Experienced Medical Leaders"}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 font-normal mt-1 max-w-xl">
-                {isHi
-                  ? "हमारा क्लिनिकल बोर्ड हर डॉक्टर और अस्पताल की गुणवत्ता, प्रमाणिकता और नैतिक आचरण की नियमित समीक्षा करता है।"
-                  : "Our medical council audits clinical protocols, reviews billing transparency, and ensures uncompromised patient safety."}
-              </p>
-            </div>
-
-            <Link
-              href="/doctors"
-              className="px-4 py-2 rounded-full bg-[#0A1128] hover:bg-slate-800 text-white text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5 self-start md:self-auto cursor-pointer"
-            >
-              <span>{isHi ? "सभी 2,500+ डॉक्टर्स देखें" : "View Specialist Directory"}</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {MEDICAL_BOARD.map((member) => (
-              <div
-                key={member.id}
-                className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group"
-              >
-                <div>
-                  {/* Photo Frame */}
-                  <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
-                    <Image
-                      src={member.image}
-                      alt={member.nameEn}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 300px"
-                      className="object-cover group-hover:scale-103 transition-transform duration-300"
-                    />
-                    <div className="absolute top-2.5 left-2.5 bg-[#0A1128]/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[10px] font-bold text-white border border-white/20">
-                      {isHi ? member.experienceHi : member.experienceEn}
-                    </div>
-                  </div>
-
-                  {/* Info Box */}
-                  <div className="p-4 text-left">
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900">
-                      {isHi ? member.nameHi : member.nameEn}
-                    </h3>
-                    <div className="text-xs text-blue-600 font-semibold mt-0.5">
-                      {isHi ? member.specialtyHi : member.specialtyEn}
-                    </div>
-                    <div className="text-[11px] text-amber-700 font-medium mt-1">
-                      {isHi ? member.roleHi : member.roleEn}
-                    </div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">
-                      {isHi ? member.hospitalHi : member.hospitalEn}
-                    </div>
-
-                    <p className="mt-2.5 text-xs text-slate-600 font-normal leading-relaxed border-t border-slate-100 pt-2.5">
-                      {isHi ? member.bioHi : member.bioEn}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-4 pt-0">
-                  <Link
-                    href={`/book?doctor=${encodeURIComponent(member.nameEn)}`}
-                    className="w-full py-2 rounded-xl bg-slate-50 hover:bg-blue-50 text-slate-800 hover:text-blue-700 text-xs font-semibold border border-slate-200 transition-all flex items-center justify-center gap-1 cursor-pointer"
-                  >
-                    <span>{isHi ? "परामर्श स्लॉट बुक करें" : "Book Consultation"}</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ====================================================================
-            7. REGIONAL NETWORK DESKS ACROSS INDIA
+            6. REGIONAL NETWORK DESKS ACROSS INDIA
         ==================================================================== */}
         <section className="py-12 sm:py-16 bg-[#0A1128] text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">

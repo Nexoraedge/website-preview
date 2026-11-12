@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import LanguageModal from "@/components/LanguageModal";
 
 export const metadata: Metadata = {
   title: "Adityam Niramayaa (आदित्यम् निरामया) — Every Step Toward Better Health",
@@ -44,6 +45,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-[#2563EB] selection:text-white">
+        <LanguageModal />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
