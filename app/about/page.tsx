@@ -139,7 +139,7 @@ export default function AboutPage() {
                 {/* Bottom Overlay Info */}
                 <div className="absolute bottom-5 left-5 right-5 text-white">
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider mb-2">
-                    <Sparkles className="w-3 h-3 text-slate-950" />
+
                     <span>{isHi ? "आध्यात्मिक प्रेरणा" : "Spiritual Inspiration & Patron"}</span>
                   </div>
                   <h3 className="text-lg sm:text-xl font-serif font-bold text-white">

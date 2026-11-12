@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import React from "react";
+import Link from "next/link";
 import {
-  Smartphone,
-  QrCode,
+  Search,
+  Upload,
+  Calendar,
+  Pill,
   ShieldCheck,
-  Check,
-  ArrowRight,
-  Zap,
+  CheckCircle2,
+  Heart,
+  ChevronDown,
   Sparkles,
-  Download,
-  Lock,
 } from "lucide-react";
 
 interface AppPromoProps {
@@ -19,312 +19,265 @@ interface AppPromoProps {
 }
 
 export default function AppPromo({ lang = "en" }: AppPromoProps) {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isSent, setIsSent] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Locomotive-style scroll momentum tracking
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  // Spring physics for buttery deceleration
-  const springConfig = { stiffness: 85, damping: 26, mass: 0.6 };
-
-  // Parallax float for background mesh ambient orbs
-  const rawOrb1Y = useTransform(scrollYProgress, [0, 1], [-100, 100]);
-  const rawOrb2Y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const orb1Y = useSpring(rawOrb1Y, springConfig);
-  const orb2Y = useSpring(rawOrb2Y, springConfig);
-
-  // Main Card reveal & elevation
-  const rawCardScale = useTransform(scrollYProgress, [0, 0.45], [0.93, 1]);
-  const rawCardY = useTransform(scrollYProgress, [0, 0.45], [55, 0]);
-  const rawCardOpacity = useTransform(scrollYProgress, [0, 0.25], [0.7, 1]);
-  const cardScale = useSpring(rawCardScale, springConfig);
-  const cardY = useSpring(rawCardY, springConfig);
-
-  // Signature 3D Locomotive tilt and parallax float for the QR console
-  const rawQrY = useTransform(scrollYProgress, [0, 1], [50, -45]);
-  const rawRotateZ = useTransform(scrollYProgress, [0, 1], [-7, 3]);
-  const rawRotateX = useTransform(scrollYProgress, [0, 1], [8, -6]);
-  const qrY = useSpring(rawQrY, springConfig);
-  const qrRotateZ = useSpring(rawRotateZ, springConfig);
-  const qrRotateX = useSpring(rawRotateX, springConfig);
-
-  // Floating satellite chips with independent parallax float speeds
-  const rawBadge1Y = useTransform(scrollYProgress, [0, 1], [30, -50]);
-  const rawBadge2Y = useTransform(scrollYProgress, [0, 1], [-20, 35]);
-  const badge1Y = useSpring(rawBadge1Y, springConfig);
-  const badge2Y = useSpring(rawBadge2Y, springConfig);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (phoneNumber.length >= 10) {
-      setIsSent(true);
-      setTimeout(() => setIsSent(false), 5000);
-    }
-  };
+  const isHi = lang === "hi";
 
   return (
-    <section
-      ref={sectionRef}
-      id="app-download"
-      className="py-24 sm:py-32 bg-[#FAFAF8] font-sans overflow-hidden select-none"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+    <section id="app-download" className="py-16 sm:py-24 bg-[#FAFAF8] font-sans">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Main Clean Banner (Tata 1mg Layout) */}
+        <div className="relative bg-gradient-to-br from-[#F6F9FE] via-[#F8FAFD] to-[#FCF9F2] rounded-3xl md:rounded-[2.5rem] border border-slate-200/90 shadow-sm p-6 sm:p-10 lg:p-14 overflow-hidden">
+          
+          {/* Subtle Ambient Backing Glow */}
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* ==============================================================
-            MASSIVE BLUE ARCHITECTURAL SLAB with Locomotive Scale & Reveal
-        ============================================================== */}
-        <motion.div
-          style={{
-            scale: cardScale,
-            y: cardY,
-            opacity: rawCardOpacity,
-          }}
-          className="relative rounded-[2.5rem] md:rounded-[3rem] overflow-hidden p-8 sm:p-14 lg:p-20 shadow-[0_30px_70px_-15px_rgba(11,27,77,0.55)] border-2 border-blue-900/30 border-b-[8px] border-b-[#071333] bg-gradient-to-br from-[#0B1736] via-[#122863] to-[#1E3A8A]"
-        >
-          {/* Parallax Mesh Gradient Ambient Orbs */}
-          <motion.div
-            style={{ y: orb1Y }}
-            className="absolute top-0 right-0 w-[600px] h-[600px] bg-cyan-400/20 rounded-full blur-[130px] pointer-events-none translate-x-1/3 -translate-y-1/3"
-          />
-          <motion.div
-            style={{ y: orb2Y }}
-            className="absolute bottom-0 left-0 w-[550px] h-[550px] bg-amber-500/15 rounded-full blur-[130px] pointer-events-none -translate-x-1/3 translate-y-1/3"
-          />
-
-          {/* Micro Grid Pattern Overlay for Depth */}
-          <div
-            className="absolute inset-0 opacity-[0.06] pointer-events-none"
-            style={{
-              backgroundImage: "radial-gradient(white 1px, transparent 1px)",
-              backgroundSize: "32px 32px",
-            }}
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
-
-            {/* ========================================================= */}
-            {/* LEFT COLUMN: App Overview, Features & SMS Form (7 cols)   */}
-            {/* ========================================================= */}
-            <div className="lg:col-span-7 space-y-9">
-
-              {/* 3D Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 border-b-2 border-b-cyan-400 text-cyan-300 text-xs font-bold tracking-wide shadow-md">
-
-                <span>
-                  {lang === "hi"
-                    ? "आदित्यम् मोबाइल ऐप — स्वास्थ्य सेवा अब आपके हाथ में"
-                    : "THE AADITYAM MOBILE APPLICATION"}
-                </span>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            
+            {/* LEFT COLUMN: Headings, Store Badges & QR Code */}
+            <div className="lg:col-span-6 space-y-6 text-left">
+              
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
+                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+                <span>{isHi ? "मोबाइल ऐप डाउनलोड" : "Adityam Mobile Experience"}</span>
               </div>
 
-              {/* Main Headline */}
-              <div className="space-y-4">
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white font-bold tracking-tight leading-[1.12]">
-                  {lang === "hi" ? (
-                    <>
-                      स्वास्थ्य सेवा, अब आपकी <br />
-                      <span className="italic text-cyan-300 font-serif">
-                        हथेली और जेब में।
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      Healthcare in your <br />
-                      <span className="italic text-cyan-300 font-serif">
-                        pocket, whenever you need it.
-                      </span>
-                    </>
-                  )}
-                </h2>
-
-                <p className="text-slate-200 text-sm sm:text-base font-light leading-relaxed max-w-xl">
-                  {lang === "hi"
-                    ? "तत्काल प्राथमिकता ओपीडी टोकन, सुरक्षित डिजिटल स्वास्थ्य रिकॉर्ड, और वास्तविक समय में अस्पताल बेड ट्रैकिंग — बिना किसी कतार और परेशानी के सीधे अपने स्मार्टफोन से।"
-                    : "Unlock instant priority OPD appointments, a verified digital health record locker, and real-time hospital bed tracking directly from your smartphone."}
-                </p>
-              </div>
-
-              {/* 3 Verified Feature Checkmarks */}
-              <div className="space-y-3.5 pt-1">
-                <div className="flex items-start gap-3 text-xs sm:text-sm text-slate-100 font-light">
-                  <div className="mt-0.5 w-5 h-5 rounded-lg bg-cyan-400/20 flex items-center justify-center shrink-0 border border-cyan-400/40 shadow-xs">
-                    <Check className="w-3 h-3 text-cyan-300" strokeWidth={3} />
-                  </div>
-                  <span>
-                    {lang === "hi"
-                      ? "प्रमाणित और अनुभवी विशेषज्ञ डॉक्टरों की संपूर्ण सूची एवं सीधी बुकिंग।"
-                      : "Direct priority booking with verified doctors across top medical disciplines."}
-                  </span>
-                </div>
-
-                <div className="flex items-start gap-3 text-xs sm:text-sm text-slate-100 font-light">
-                  <div className="mt-0.5 w-5 h-5 rounded-lg bg-cyan-400/20 flex items-center justify-center shrink-0 border border-cyan-400/40 shadow-xs">
-                    <Check className="w-3 h-3 text-cyan-300" strokeWidth={3} />
-                  </div>
-                  <span>
-                    {lang === "hi"
-                      ? "जैन ईएनटी, सीकेएस, अरिहंत व महावीर जैसे संबद्ध अस्पतालों में विशेष रियायती दरें।"
-                      : "Empanelled hospitals including Jain ENT, CKS, Arihant & Mahaveer with transparent pricing."}
-                  </span>
-                </div>
-
-                <div className="flex items-start gap-3 text-xs sm:text-sm text-slate-100 font-light">
-                  <div className="mt-0.5 w-5 h-5 rounded-lg bg-cyan-400/20 flex items-center justify-center shrink-0 border border-cyan-400/40 shadow-xs">
-                    <Check className="w-3 h-3 text-cyan-300" strokeWidth={3} />
-                  </div>
-                  <span>
-                    {lang === "hi"
-                      ? "100% पारदर्शी दरें, नि:शुल्क पर्चा आर्काइव और समुदाय-हितैषी स्वास्थ्य लाभ।"
-                      : "100% transparent rates, free prescription archives, and community-driven savings."}
-                  </span>
-                </div>
-              </div>
-
-              {/* SMS Direct Link Dispatch Form */}
-              <div className="pt-6 border-t border-white/10">
-                <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Zap className="w-3.5 h-3.5 text-amber-400" />
-                  <span>
-                    {lang === "hi"
-                      ? "सीधे डाउनलोड लिंक हेतु अपना मोबाइल नंबर दर्ज करें"
-                      : "Get the direct installation link via SMS"}
-                  </span>
-                </div>
-
-                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-lg">
-                  <div className="relative flex-1 group">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-cyan-300/80">
-                      +91
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                {isHi ? (
+                  <>
+                    आदित्यम् निरामया: ऐप डाउनलोड करें। <br />
+                    <span className="text-blue-600 font-serif italic font-normal">
+                      विश्वसनीय स्वास्थ्य सेवा, आपकी उंगलियों पर।
                     </span>
-                    <input
-                      type="tel"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ""))}
-                      placeholder={lang === "hi" ? "मोबाइल नंबर दर्ज करें" : "Enter 10-digit mobile number"}
-                      maxLength={10}
-                      className="w-full pl-14 pr-4 py-3.5 bg-black/30 backdrop-blur-md border border-white/20 focus:border-cyan-400 focus:bg-black/40 rounded-2xl text-sm text-white placeholder-slate-400 font-medium outline-none transition-all shadow-inner"
-                      required
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="px-7 py-3.5 bg-gradient-to-b from-[#F59E0B] to-[#D97706] hover:from-[#FBBF24] hover:to-[#F59E0B] text-slate-950 rounded-2xl text-xs sm:text-sm font-black tracking-wide shadow-xl border border-amber-300 border-b-[4px] border-b-[#92400E] active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
-                  >
-                    <span>{lang === "hi" ? "लिंक भेजें" : "Send Link"}</span>
-                    <ArrowRight className="w-4 h-4 text-slate-950" strokeWidth={2.5} />
-                  </button>
-                </form>
-
-                {isSent && (
-                  <div className="mt-3 text-xs font-bold text-cyan-300 flex items-center gap-2 p-3 bg-cyan-950/60 border border-cyan-400/40 rounded-xl">
-                    <Lock className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                    <span>
-                      {lang === "hi"
-                        ? `सुरक्षित ऐप लिंक +91 ${phoneNumber} पर भेज दिया गया है। अपने संदेश जांचें!`
-                        : `Secure app link sent to +91 ${phoneNumber}. Please check your SMS!`}
+                  </>
+                ) : (
+                  <>
+                    Download the Adityam Niramayaa app. <br />
+                    <span className="text-blue-600 font-serif italic font-normal">
+                      Trusted healthcare, at your fingertips.
                     </span>
-                  </div>
+                  </>
                 )}
+              </h2>
+
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg font-normal">
+                {isHi
+                  ? "डॉक्टर परामर्श बुक करें, NABL टेस्ट शेड्यूल करें, डॉक्टर का पर्चा अपलोड कर असली दवाइयां मंगाएं और स्वास्थ्य रिकॉर्ड सुरक्षित रखें।"
+                  : "Book specialist doctors, schedule NABL lab tests, order certified genuine medicines with 20% relief, and track family health records seamlessly."}
+              </p>
+
+              {/* Badges + QR Code Row (Tata 1mg Exact Design) */}
+              <div className="pt-2 flex flex-wrap items-center gap-5 sm:gap-6">
+                
+                {/* App Store & Google Play Buttons */}
+                <div className="flex flex-col gap-2.5">
+                  {/* Apple App Store */}
+                  <Link
+                    href="/get-app"
+                    className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-black hover:bg-slate-900 text-white transition-all shadow-xs group"
+                  >
+                    <svg className="w-6 h-6 fill-current text-white shrink-0" viewBox="0 0 24 24">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.72-.86 2.74 1 .08 2.03-.51 2.57-1.24" />
+                    </svg>
+                    <div className="text-left">
+                      <div className="text-[9px] uppercase tracking-wider text-slate-300 font-medium leading-none">
+                        Download on the
+                      </div>
+                      <div className="text-sm font-bold text-white tracking-tight leading-tight mt-0.5">
+                        App Store
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* Google Play Store */}
+                  <Link
+                    href="/get-app"
+                    className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-black hover:bg-slate-900 text-white transition-all shadow-xs group"
+                  >
+                    <svg className="w-6 h-6 fill-current text-white shrink-0" viewBox="0 0 24 24">
+                      <path d="M3.609 1.814L13.793 12 3.61 22.186a1.9 1.9 0 0 1-.61-.926V2.74c.14-.367.36-.69.609-.926zm11.3 11.3l2.67 2.67-12.015 6.94 9.345-9.61zm2.67-2.228l3.197 1.848a1.27 1.27 0 0 1 0 2.192l-3.197 1.848-2.67-2.67 2.67-2.218zM5.564 2.247l12.015 6.94-2.67 2.67-9.345-9.61z" />
+                    </svg>
+                    <div className="text-left">
+                      <div className="text-[9px] uppercase tracking-wider text-slate-300 font-medium leading-none">
+                        GET IT ON
+                      </div>
+                      <div className="text-sm font-bold text-white tracking-tight leading-tight mt-0.5">
+                        Google Play
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+
+                {/* "or" text divider */}
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider hidden sm:block">
+                  or
+                </div>
+
+                {/* Clean QR Code Box */}
+                <div className="flex items-center gap-3 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-xs">
+                  <div className="relative w-20 h-20 bg-slate-950 rounded-xl p-1.5 flex items-center justify-center">
+                    {/* Stylized high-contrast QR Matrix */}
+                    <div className="w-full h-full bg-white rounded-lg p-1 grid grid-cols-5 grid-rows-5 gap-0.5">
+                      <div className="col-span-2 row-span-2 bg-slate-950 rounded-xs" />
+                      <div className="col-span-1 row-span-1 bg-blue-600 rounded-xs" />
+                      <div className="col-span-2 row-span-2 bg-slate-950 rounded-xs" />
+                      <div className="col-span-1 row-span-1 bg-slate-950" />
+                      <div className="col-span-1 row-span-1 bg-blue-600" />
+                      <div className="col-span-1 row-span-1 bg-slate-950" />
+                      <div className="col-span-2 row-span-2 bg-slate-950 rounded-xs" />
+                      <div className="col-span-1 row-span-1 bg-blue-600" />
+                      <div className="col-span-2 row-span-2 bg-slate-950 rounded-xs" />
+                    </div>
+                    {/* Center Emblem */}
+                    <div className="absolute inset-0 m-auto w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-[10px] font-black border border-white">
+                      अ
+                    </div>
+                  </div>
+
+                  <div className="text-left pr-2">
+                    <span className="text-[11px] font-bold text-slate-800 block leading-tight">
+                      {isHi ? "स्कैन कर तुरंत डाउनलोड करें" : "Scan with camera"}
+                    </span>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">
+                      {isHi ? "आईओएस व एंड्रॉयड" : "iOS & Android ready"}
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Value Checkpoints */}
+              <div className="pt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-600 font-medium">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {isHi ? "शून्य कमीशन" : "Zero Commission"}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {isHi ? "100% असली दवाएं" : "100% Genuine Medicines"}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {isHi ? "सुरक्षित स्वास्थ्य डेटा" : "DPDP Act Compliant"}
+                </span>
               </div>
 
             </div>
 
-            {/* ========================================================= */}
-            {/* RIGHT COLUMN: Signature Locomotive 3D Tilted QR Console  */}
-            {/* ========================================================= */}
-            <div className="lg:col-span-5 flex flex-col items-center justify-center relative perspective-[1200px]">
+            {/* RIGHT COLUMN: Realistic Dual Smartphone Mockups (Tata 1mg Layout) */}
+            <div className="lg:col-span-6 flex justify-center lg:justify-end">
+              <div className="relative w-full max-w-[420px] h-[380px] sm:h-[420px] select-none">
+                
+                {/* Secondary Background Phone (Angled slightly right) */}
+                <div className="absolute right-0 top-6 w-[230px] sm:w-[250px] h-[340px] sm:h-[370px] bg-slate-900 rounded-[2.5rem] p-2.5 shadow-xl border-4 border-slate-800/80 transform rotate-3 hover:rotate-1 transition-transform duration-300">
+                  <div className="w-full h-full bg-gradient-to-b from-[#FFF5EE] to-white rounded-[2rem] overflow-hidden p-3.5 text-slate-800 flex flex-col justify-between">
+                    <div>
+                      {/* Top Bar */}
+                      <div className="flex items-center justify-between text-[10px] font-bold text-slate-600 mb-3 border-b border-orange-100 pb-2">
+                        <span>Suraj Jain</span>
+                        <span className="text-[9px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
+                          Member
+                        </span>
+                      </div>
 
-              {/* Floating Satellite Badge 1 (Top-Left Parallax Float) */}
-              <motion.div
-                style={{ y: badge1Y }}
-                className="absolute -top-6 -left-4 z-20 hidden sm:flex items-center gap-2 px-3.5 py-1.5 bg-[#071330] border border-cyan-400/40 rounded-full text-[11px] font-bold text-cyan-200 shadow-xl"
-              >
-                <div className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                <span>⚡ {lang === "hi" ? "त्वरित ओपीडी पास" : "Priority OPD Queue Pass"}</span>
-              </motion.div>
+                      {/* Package Card */}
+                      <div className="p-3 rounded-2xl bg-white border border-slate-200/80 shadow-2xs mb-3">
+                        <span className="text-[10px] text-slate-400 font-semibold block">Active Order</span>
+                        <span className="text-xs font-bold text-slate-900 block mt-0.5">Annual Health Checkup</span>
+                        <div className="mt-2 text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md inline-block">
+                          Reports in 6-12 Hrs
+                        </div>
+                      </div>
 
-              {/* Floating Satellite Badge 2 (Bottom-Right Parallax Float) */}
-              <motion.div
-                style={{ y: badge2Y }}
-                className="absolute -bottom-6 -right-2 z-20 hidden sm:flex items-center gap-2 px-4 py-2 bg-[#0B1E45] border border-amber-400/40 rounded-2xl text-[11px] font-bold text-amber-300 shadow-2xl"
-              >
-                <span className="text-amber-400">★ 4.9</span>
-                <span className="text-white/40">•</span>
-                <span>{lang === "hi" ? "50,000+ सक्रिय उपयोगकर्ता" : "50k+ Active Users"}</span>
-              </motion.div>
+                      {/* Health Overview Gauge */}
+                      <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100">
+                        <span className="text-[9px] uppercase font-bold text-blue-700 tracking-wider">Health Overview</span>
+                        <div className="flex items-baseline gap-2 mt-1">
+                          <span className="text-2xl font-black text-blue-900 font-sans">96</span>
+                          <span className="text-[10px] font-bold text-emerald-600">Optimal Range</span>
+                        </div>
+                        <p className="text-[10px] text-slate-500 mt-1">All vital parameters normal</p>
+                      </div>
+                    </div>
 
-              {/* The 3D Physical Tilted QR Console */}
-              <motion.div
-                style={{
-                  y: qrY,
-                  rotateZ: qrRotateZ,
-                  rotateX: qrRotateX,
-                  transformStyle: "preserve-3d",
-                }}
-                whileHover={{
-                  rotateZ: 0,
-                  rotateX: 0,
-                  scale: 1.03,
-                  transition: { duration: 0.35, ease: "easeOut" },
-                }}
-                className="relative bg-[#061229]/90 backdrop-blur-2xl rounded-[2.5rem] p-7 sm:p-10 border-2 border-[#1E3A8A]/80 border-b-[8px] border-b-[#030A17] shadow-[0_25px_60px_-10px_rgba(0,0,0,0.7)] flex flex-col items-center w-full max-w-sm group cursor-pointer transition-shadow duration-500 hover:shadow-[0_30px_70px_rgba(37,99,235,0.35)]"
-              >
-                {/* Micro Ambient Corner LEDs */}
-                <div className="absolute top-5 left-5 w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                <div className="absolute top-5 right-5 w-2 h-2 rounded-full bg-amber-400 animate-pulse delay-150" />
-
-                {/* Smartphone Icon Pod */}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white mb-6 shadow-lg shadow-blue-900/60 group-hover:scale-110 transition-transform duration-300">
-                  <Smartphone className="w-7 h-7" strokeWidth={1.75} />
-                </div>
-
-                <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mb-1.5 text-center">
-                  {lang === "hi" ? "इंस्टॉल करने हेतु स्कैन करें" : "Scan to Install"}
-                </h3>
-                <p className="text-[11px] text-cyan-300 font-mono tracking-wider uppercase mb-6 text-center">
-                  {lang === "hi" ? "iOS एवं Android दोनों पर उपलब्ध" : "iOS & Android Supported"}
-                </p>
-
-                {/* High Contrast Physical QR Container */}
-                <div className="p-4 bg-white rounded-3xl shadow-2xl w-48 h-48 sm:w-52 sm:h-52 relative flex items-center justify-center border-4 border-slate-100 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.45)] transition-shadow duration-300">
-                  <div className="absolute inset-2 border-2 border-dashed border-slate-300 rounded-2xl pointer-events-none" />
-
-                  {/* QR Vector Illustration */}
-                  <QrCode className="w-36 h-36 sm:w-40 sm:h-40 text-[#0B1B4D]" strokeWidth={1} />
-
-                  {/* Sacred Center Emblem */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0B1B4D] to-[#1E3A8A] flex items-center justify-center shadow-xl border-[3px] border-white">
-                      <ShieldCheck className="w-6 h-6 text-amber-400" strokeWidth={2.2} />
+                    <div className="text-[9px] text-center text-slate-400 font-medium">
+                      ISO 27001 Encrypted Storage
                     </div>
                   </div>
                 </div>
 
-                {/* Platform Download Indicator Bar */}
-                <div className="mt-6 w-full pt-4 border-t border-white/10 flex items-center justify-center gap-4 text-[10px] text-slate-300 font-bold uppercase tracking-wider">
-                  <span className="flex items-center gap-1.5 hover:text-white transition-colors">
-                    <Download className="w-3.5 h-3.5 text-cyan-400" />
-                    Apple App Store
-                  </span>
-                  <span className="text-white/20">•</span>
-                  <span className="flex items-center gap-1.5 hover:text-white transition-colors">
-                    <Download className="w-3.5 h-3.5 text-amber-400" />
-                    Google Play
-                  </span>
+                {/* Primary Foreground Phone (Clean & Front-Facing) */}
+                <div className="absolute left-2 sm:left-4 top-0 w-[240px] sm:w-[265px] h-[360px] sm:h-[400px] bg-slate-950 rounded-[2.8rem] p-3 shadow-2xl border-4 border-slate-800 transform -rotate-1 hover:rotate-0 transition-transform duration-300 z-20">
+                  
+                  {/* Phone Screen Notch */}
+                  <div className="w-full h-full bg-white rounded-[2.2rem] overflow-hidden flex flex-col justify-between p-3.5 text-left">
+                    <div>
+                      {/* Location Top Bar */}
+                      <div className="flex items-center justify-between text-[11px] mb-2.5">
+                        <div className="flex items-center gap-1 font-bold text-slate-800">
+                          <span className="w-2 h-2 rounded-full bg-blue-600" />
+                          <span>Jaipur / Delhi NCR</span>
+                          <ChevronDown className="w-3 h-3 text-slate-400" />
+                        </div>
+                        <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                          <Heart className="w-3.5 h-3.5 text-blue-600 fill-blue-600/20" />
+                        </div>
+                      </div>
+
+                      {/* Mock Search Bar */}
+                      <div className="bg-slate-100 rounded-xl px-3 py-2 flex items-center gap-2 mb-3 text-slate-400 text-[10px]">
+                        <Search className="w-3 h-3" />
+                        <span>Search doctors, medicines, tests...</span>
+                      </div>
+
+                      {/* Quick Action Grid (Tata 1mg 4-Pill Layout) */}
+                      <div className="grid grid-cols-4 gap-1.5 text-center mb-3">
+                        <div className="p-1.5 rounded-xl bg-blue-50 border border-blue-100">
+                          <Calendar className="w-3.5 h-3.5 text-blue-600 mx-auto mb-1" />
+                          <span className="text-[8px] font-bold text-slate-800 block leading-tight">Doctors</span>
+                        </div>
+                        <div className="p-1.5 rounded-xl bg-emerald-50 border border-emerald-100">
+                          <Upload className="w-3.5 h-3.5 text-emerald-600 mx-auto mb-1" />
+                          <span className="text-[8px] font-bold text-slate-800 block leading-tight">Rx Upload</span>
+                        </div>
+                        <div className="p-1.5 rounded-xl bg-amber-50 border border-amber-100">
+                          <Pill className="w-3.5 h-3.5 text-amber-600 mx-auto mb-1" />
+                          <span className="text-[8px] font-bold text-slate-800 block leading-tight">Medicines</span>
+                        </div>
+                        <div className="p-1.5 rounded-xl bg-purple-50 border border-purple-100">
+                          <ShieldCheck className="w-3.5 h-3.5 text-purple-600 mx-auto mb-1" />
+                          <span className="text-[8px] font-bold text-slate-800 block leading-tight">Hospitals</span>
+                        </div>
+                      </div>
+
+                      {/* Featured Offer Card */}
+                      <div className="p-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-xs">
+                        <span className="text-[8px] uppercase tracking-wider font-extrabold text-blue-200 block">
+                          Medicine Delivery
+                        </span>
+                        <span className="text-[11px] font-bold block mt-0.5">Up to 20% Direct Relief</span>
+                        <span className="text-[9px] text-blue-100 block mt-0.5">Sealed packaging • Licensed verification</span>
+                      </div>
+                    </div>
+
+                    {/* Bottom Status Pill */}
+                    <div className="bg-slate-50 border border-slate-150 rounded-xl p-2 flex items-center justify-between text-[9px] font-semibold text-slate-600">
+                      <span className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        2,500+ Verified Clinicians
+                      </span>
+                      <span className="text-blue-600 font-bold">Open App →</span>
+                    </div>
+                  </div>
+
                 </div>
 
-              </motion.div>
-
+              </div>
             </div>
 
           </div>
-        </motion.div>
+
+        </div>
 
       </div>
     </section>

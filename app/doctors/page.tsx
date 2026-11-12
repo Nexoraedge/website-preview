@@ -4,21 +4,14 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Stethoscope,
   Star,
   MapPin,
-  Clock,
   ShieldCheck,
   Search,
   Filter,
   Building2,
-  Sparkles,
   CheckCircle2,
   PhoneCall,
-  Activity,
-  Layers,
-  Award,
-  UserCheck,
   Smartphone,
   Info,
   Check,
@@ -27,15 +20,13 @@ import {
   Loader2,
   GraduationCap,
   X,
-  Languages,
-  ArrowRight,
-  Calendar,
   Heart,
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import HomeFAQ from "@/components/HomeFAQ";
 import { supabase } from "@/lib/supabase";
 import {
   translateDoctorName,
@@ -974,24 +965,85 @@ export default function DoctorsPage() {
         </section>
 
         {/* ====================================================================
-            8. DOCTOR REGISTRATION FORM (SAVES TO SUPABASE)
+            8. FREQUENTLY ASKED QUESTIONS (TATA 1MG STYLE ACCORDION)
         ==================================================================== */}
-        <section id="register-doctor" className="py-16 bg-[#F1F5F9] px-4 sm:px-6 scroll-mt-20">
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/80 text-[#2563EB] text-xs font-bold mb-3 border border-blue-200">
-                <GraduationCap className="w-3.5 h-3.5" />
-                <span>{lang === "hi" ? "विशेषज्ञ डॉक्टर पंजीकरण" : "Physician Empanelment Portal"}</span>
+        <HomeFAQ lang={lang} />
+
+        {/* ====================================================================
+            9. DOCTOR REGISTRATION & EMPANELMENT (SAVES TO SUPABASE)
+        ==================================================================== */}
+        <section id="register-doctor" className="py-16 bg-[#F8FAFC] px-4 sm:px-6 scroll-mt-20 border-t border-slate-200/90">
+          <div className="max-w-4xl mx-auto space-y-10">
+
+            {/* Welcoming Illustrative Doctor Banner (Tata 1mg Style) */}
+            <div className="relative bg-gradient-to-br from-[#FFFDF8] via-[#FAF7EE] to-[#F5EEDB] rounded-3xl p-6 sm:p-10 border border-amber-200/80 shadow-md overflow-hidden">
+              <div className="absolute top-0 right-0 w-80 h-80 bg-amber-300/15 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                {/* Illustration Column */}
+                <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
+                  <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 drop-shadow-xl group">
+                    <div className="absolute -inset-1 bg-gradient-to-tr from-amber-400/25 to-blue-500/25 rounded-full blur-lg group-hover:scale-105 transition-transform" />
+                    <div className="relative w-full h-full rounded-full overflow-hidden bg-white border-4 border-white shadow-md">
+                      <Image
+                        src="/images/doc+hoso.png"
+                        alt={lang === "hi" ? "विशेषज्ञ डॉक्टर पंजीकरण" : "Physician Empanelment Portal"}
+                        fill
+                        sizes="(max-width: 768px) 240px, 300px"
+                        className="object-cover group-hover:scale-103 transition-transform duration-300"
+                        priority
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Text & Pitch Column */}
+                <div className="lg:col-span-7 space-y-4 order-1 lg:order-2 text-left">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-[#2563EB] text-xs font-bold border border-blue-200">
+                    <GraduationCap className="w-3.5 h-3.5" />
+                    <span>{lang === "hi" ? "विशेषज्ञ डॉक्टर पंजीकरण पोर्टल" : "Physician Empanelment Faculty"}</span>
+                  </div>
+
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    {lang === "hi" ? (
+                      <>
+                        क्या आप एक विशेषज्ञ डॉक्टर हैं? <br />
+                        <span className="text-blue-700 font-serif italic font-normal text-xl sm:text-2xl lg:text-3xl">
+                          आदित्यम् फैकल्टी से जुड़ें।
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        Are you a Specialist Doctor? <br />
+                        <span className="text-blue-700 font-serif italic font-normal text-xl sm:text-2xl lg:text-3xl">
+                          Join Our Verified Clinical Faculty.
+                        </span>
+                      </>
+                    )}
+                  </h2>
+
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    {lang === "hi"
+                      ? "व्यावसायिक दबावों और बिचौलिया कमीशन से मुक्त समर्पित रोगी सेवा। डिजिटल टोकन से कतार-मुक्त ओपीडी और पूर्व-सत्यापित मेडिकल हिस्ट्री प्राप्त करें।"
+                      : "Practice with complete clinical autonomy. Connect with thousands of verified patients with transparent pre-fixed fees, automated digital OPD queues, and zero commercial referral targets."}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-slate-700 font-medium pt-1">
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>{lang === "hi" ? "शून्य पंजीकरण शुल्क" : "Zero Listing Fees"}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>{lang === "hi" ? "48 घंटे में सत्यापन" : "48-Hour Council Verification"}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>{lang === "hi" ? "डिजिटल ओपीडी टोकन" : "Digital Token OPD"}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h2 className="text-2xl sm:text-4xl font-serif text-slate-900 font-bold tracking-tight">
-                {lang === "hi" ? "आदित्यम् विशेषज्ञ नेटवर्क से जुड़ें" : "Register as an Empanelled Specialist"}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                {lang === "hi"
-                  ? "यदि आप एक योग्य, समर्पित विशेषज्ञ डॉक्टर हैं, तो हमारे पारदर्शी नेटवर्क में शामिल होने हेतु आवेदन करें। आपका आवेदन सीधे हमारे मेडिकल बोर्ड द्वारा समीक्षित होगा।"
-                  : "Join our collective of verified clinicians committed to transparent patient care. Submit your credentials below for review by our Clinical Board."}
-              </p>
             </div>
 
             {/* Submission Status Alerts */}

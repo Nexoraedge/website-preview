@@ -11,10 +11,6 @@ import {
   Search,
   PhoneCall,
   CheckCircle2,
-  Utensils,
-  CreditCard,
-  HeartHandshake,
-  Bed,
   Info,
   Check,
   Copy,
@@ -23,15 +19,19 @@ import {
   X,
   BadgePercent,
   ArrowRight,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  HelpCircle,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AppPromo from "@/components/AppPromo";
 import { supabase } from "@/lib/supabase";
 import {
   translateHospitalName,
   translateSpecialty,
   translateCity,
-  translateUiTerm,
 } from "@/lib/hindiDictionary";
 import { useLanguage } from "@/lib/useLanguage";
 
@@ -252,6 +252,49 @@ export default function HospitalsPage() {
   const [submitError, setSubmitError] = useState("");
   const [applicationId, setApplicationId] = useState("");
   const [copiedAppId, setCopiedAppId] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const hospitalsScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollHospitals = (direction: "left" | "right") => {
+    if (hospitalsScrollRef.current) {
+      const scrollAmount = direction === "left" ? -460 : 460;
+      hospitalsScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const hospitalFaqs = [
+    {
+      qEn: "How does cashless TPA insurance facilitation work at empanelled hospitals?",
+      qHi: "संबद्ध अस्पतालों में कैशलेस टीपीए बीमा सुविधा कैसे काम करती है?",
+      aEn: "Our on-ground Hospital Buddy assists patient families at the hospital's TPA desk, coordinating standardized pre-authorizations and document verification to ensure fast, dispute-free claim approvals with zero unnecessary delays.",
+      aHi: "अस्पताल के टीपीए डेस्क पर हमारे 'अस्पताल मित्र' समन्वयक मरीज के परिवार की सहायता करते हैं और सभी आवश्यक दस्तावेजों का त्वरित सत्यापन कराकर बिना रुकावट क्लेम पास कराते हैं।",
+    },
+    {
+      qEn: "What are the eligibility criteria for a hospital to join the Adityam Network?",
+      qHi: "अस्पताल संबद्धता के लिए क्या योग्यता मानदण्ड आवश्यक हैं?",
+      aEn: "We welcome accredited multispecialty hospitals, nursing homes, and surgical centers with valid NABH/State Health Authority registrations, transparent billing ethics, and clean clinical audit track records.",
+      aHi: "हम NABH या राज्य स्वास्थ्य प्राधिकरण द्वारा पंजीकृत, पारदर्शी बिलिंग व्यवस्था और नैतिक चिकित्सा मानकों का पालन करने वाले मल्टी-स्पेशलिटी अस्पतालों का स्वागत करते हैं।",
+    },
+    {
+      qEn: "Are there any upfront listing charges or annual platform fees?",
+      qHi: "क्या नेटवर्क से जुड़ने के लिए कोई अग्रिम अथवा वार्षिक शुल्क है?",
+      aEn: "No. Empanelment on Adityam Niramayaa is completely free of listing or upfront fees. We operate as a service-oriented non-profit collective dedicated to transparent, compassionate healthcare access.",
+      aHi: "नहीं। आदित्यम् निरामया: से जुड़ने के लिए कोई भी अग्रिम पंजीकरण या वार्षिक शुल्क नहीं लिया जाता। यह गैर-व्यावसायिक सेवा पर आधारित पावन मंच है।",
+    },
+    {
+      qEn: "What is the role of the dedicated on-site 'Hospital Buddy' desk?",
+      qHi: "अस्पताल में 'अस्पताल मित्र' सहायता डेस्क की क्या भूमिका होती है?",
+      aEn: "Our on-site care executives manage patient reception, guide families through OPD & admission queues, verify pre-fixed surgery package billing, and coordinate pure Satvik meal concierge services.",
+      aHi: "हमारे ऑन-साइट केयर एक्जीक्यूटिव मरीजों के स्वागत, ओपीडी और भर्ती कतार प्रबंधन, रियायती पैकेज बिलिंग सत्यापन और शुद्ध सात्विक भोजन व्यवस्था में पूरी मदद करते हैं।",
+    },
+    {
+      qEn: "How are pre-negotiated surgery package tariffs determined?",
+      qHi: "रियायती सर्जरी पैकेज दरें कैसे तय की जाती हैं?",
+      aEn: "Our Medical Governance Council collaborates with your clinical board to establish transparent, all-inclusive package tariffs (covering bed stay, OT, surgical consumables, and nursing) with zero surprise discharge costs.",
+      aHi: "हमारी मेडिकल काउंसिल आपके अस्पताल प्रबंधन के साथ मिलकर पारदर्शी व पूर्ण पैकेज दरें (ओटी, बेड, दवाएं व नर्सिंग सहित) तय करती है ताकि मरीज पर कोई छुपा खर्च न आए।",
+    },
+  ];
 
   // 1. Fetch live hospitals from Supabase with fallback
   useEffect(() => {
@@ -533,18 +576,50 @@ export default function HospitalsPage() {
         </section>
 
         {/* ====================================================================
-            4. PARTNER HOSPITALS DIRECTORY (IMAGE 2 EXACT CARD DESIGN)
+            4. PARTNER HOSPITALS DIRECTORY (HORIZONTAL SCROLL EXPERIENCE)
         ==================================================================== */}
         <section className="py-12 px-4 sm:px-6">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-blue-600" />
-                <span>{lang === "hi" ? "संबद्ध अस्पताल संजाल" : "Empanelled Network Hospitals"}</span>
-              </h2>
-              <span className="text-xs font-semibold text-slate-500">
-                {filteredHospitals.length} {lang === "hi" ? "अस्पताल प्रदर्शित" : "Institutions Displayed"}
-              </span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+              <div>
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-blue-600" />
+                  <span>{lang === "hi" ? "संबद्ध अस्पताल संजाल" : "Empanelled Network Hospitals"}</span>
+                </h2>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                  {lang === "hi"
+                    ? "सभी केंद्र कैशलेस टीपीए डेस्क व सत्यापित गुणवत्ता मानकों से सुसज्जित हैं"
+                    : "Accredited multi-specialty centers with 100% Cashless TPA and verified doctors"}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                  {filteredHospitals.length} {lang === "hi" ? "अस्पताल प्रदर्शित" : "Institutions Displayed"}
+                </span>
+
+                {/* Left / Right Scroll Controls */}
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => scrollHospitals("left")}
+                    className="w-9 h-9 rounded-full bg-white hover:bg-slate-100 active:bg-slate-200 border border-slate-200/90 shadow-2xs flex items-center justify-center text-slate-700 hover:text-blue-600 transition-all cursor-pointer"
+                    aria-label="Previous Hospital"
+                    title={lang === "hi" ? "पिछला अस्पताल" : "Previous"}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollHospitals("right")}
+                    className="w-9 h-9 rounded-full bg-white hover:bg-slate-100 active:bg-slate-200 border border-slate-200/90 shadow-2xs flex items-center justify-center text-slate-700 hover:text-blue-600 transition-all cursor-pointer"
+                    aria-label="Next Hospital"
+                    title={lang === "hi" ? "अगला अस्पताल" : "Next"}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
             </div>
 
             {loading ? (
@@ -583,7 +658,11 @@ export default function HospitalsPage() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7">
+              <div>
+                <div
+                  ref={hospitalsScrollRef}
+                  className="flex gap-6 overflow-x-auto pb-6 pt-2 scroll-smooth scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:-mx-6 sm:px-6"
+                >
                 {filteredHospitals.map((hosp, idx) => {
                   const imageSrc = hosp.image_url || "/images/hospital_shanti.jpg";
                   const distanceStr = hosp.distance || `${(0.6 + idx * 1.5).toFixed(1)} km`;
@@ -608,7 +687,7 @@ export default function HospitalsPage() {
                   return (
                     <div
                       key={hosp.id}
-                      className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:shadow-[0_12px_32px_rgba(37,99,235,0.12)] transition-all duration-300 overflow-hidden flex flex-col justify-between group"
+                      className="w-[86vw] sm:w-[420px] md:w-[460px] shrink-0 snap-start bg-white rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:shadow-[0_16px_36px_rgba(37,99,235,0.12)] hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col justify-between group"
                     >
                       {/* Top Photo Header with Overlaid Badges and Organic Wave Curve */}
                       <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100">
@@ -616,7 +695,7 @@ export default function HospitalsPage() {
                           src={imageSrc}
                           alt={hosp.name}
                           fill
-                          sizes="(max-width: 768px) 100vw, 50vw"
+                          sizes="(max-width: 768px) 86vw, 460px"
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
 
@@ -720,6 +799,19 @@ export default function HospitalsPage() {
                   );
                 })}
               </div>
+
+              {/* Horizontal Scroll Hint */}
+              <div className="flex items-center justify-between text-xs text-slate-400 font-medium mt-3 px-1">
+                <span className="flex items-center gap-1.5 text-slate-500">
+                  <span>←</span>
+                  <span>{lang === "hi" ? "अन्य अस्पताल देखने के लिए क्षैतिज स्क्रॉल या स्वाइप करें" : "Scroll horizontally or swipe to browse all hospitals"}</span>
+                  <span>→</span>
+                </span>
+                <span className="hidden sm:inline text-slate-400">
+                  {lang === "hi" ? `कुल ${filteredHospitals.length} सत्यापित केंद्र` : `${filteredHospitals.length} Verified Network Centers`}
+                </span>
+              </div>
+            </div>
             )}
           </div>
         </section>
@@ -914,24 +1006,132 @@ export default function HospitalsPage() {
         </section>
 
         {/* ====================================================================
-            7. HOSPITAL EMPANELMENT FORM (SAVES DIRECTLY TO SUPABASE)
+            7. FREQUENTLY ASKED QUESTIONS (TATA 1MG STYLE ACCORDION)
         ==================================================================== */}
-        <section id="register-hospital" className="py-16 bg-[#F1F5F9] px-4 sm:px-6 scroll-mt-20">
+        <section className="py-14 bg-white  border-slate-200/90 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
-            {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold mb-3 border border-indigo-200">
-                <Building2 className="w-3.5 h-3.5" />
-                <span>{lang === "hi" ? "अस्पताल संबद्धता पोर्टल" : "Institutional Empanelment Portal"}</span>
-              </div>
-              <h2 className="text-2xl sm:text-4xl font-serif text-slate-900 font-bold tracking-tight">
-                {lang === "hi" ? "अपने अस्पताल को संबद्ध करें" : "Empanel Your Healthcare Institution"}
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+                {lang === "hi" ? "अस्पताल संबद्धता प्रश्नोत्तरी" : "Empanelment FAQ"}
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2.5 tracking-tight">
+                {lang === "hi" ? "अस्पताल संबद्धता के बारे में जरूरी जानकारी" : "Frequently Asked Questions About Empanelment"}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-500 mt-2 font-medium">
                 {lang === "hi"
-                  ? "यदि आप किसी अस्पताल, नर्सिंग होम अथवा सुपर स्पेशलिटी केंद्र के संचालक या चिकित्सा अधीक्षक हैं, तो आदित्यम् निरामया नेटवर्क में संबद्धता हेतु आवेदन करें।"
-                  : "Hospital administrators and medical superintendents are invited to apply for network empanelment. Applications are registered directly in our official Supabase registry."}
+                  ? "कैशलेस टीपीए, ऑनबोर्डिंग मानदण्ड और रियायती पैकेज बिलिंग से जुड़े स्पष्ट उत्तर।"
+                  : "Transparent guidelines on cashless TPA desks, hospital onboarding, and patient care ethics."}
               </p>
+            </div>
+
+            <div className="divide-y divide-slate-200 border-y border-slate-200">
+              {hospitalFaqs.map((faq, idx) => {
+                const isOpen = openFaq === idx;
+                return (
+                  <div key={idx} className="transition-colors">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      className="w-full text-left py-4 sm:py-5 flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-slate-900 hover:text-indigo-600 transition-colors cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <HelpCircle className="w-4 h-4 text-indigo-600 shrink-0" />
+                        <span>{lang === "hi" ? faq.qHi : faq.qEn}</span>
+                      </div>
+                      <span
+                        className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180 bg-indigo-50 text-indigo-600" : "bg-slate-100 text-slate-500"
+                          }`}
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                      </span>
+                    </button>
+                    {isOpen && (
+                      <div className="pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                        {lang === "hi" ? faq.aHi : faq.aEn}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ====================================================================
+            8. HOSPITAL EMPANELMENT & ONBOARDING (SAVES TO SUPABASE)
+        ==================================================================== */}
+        <section id="register-hospital" className="py-16 bg-[#F8FAFC] px-4 sm:px-6 scroll-mt-20 border-t border-slate-200/90">
+          <div className="max-w-4xl mx-auto space-y-10">
+
+            {/* Welcoming Illustrative Hospital Banner (Tata 1mg Style) */}
+            <div className="relative bg-gradient-to-br from-[#FFFDF8] via-[#FAF7EE] to-[#F5EEDB] rounded-3xl p-6 sm:p-10 border border-amber-200/80 shadow-md overflow-hidden">
+              <div className="absolute top-0 right-0 w-80 h-80 bg-amber-300/15 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                {/* Illustration Column */}
+                <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
+                  <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 drop-shadow-xl group">
+                    <div className="absolute -inset-1 bg-gradient-to-tr from-amber-400/25 to-blue-500/25 rounded-full blur-lg group-hover:scale-105 transition-transform" />
+                    <div className="relative w-full h-full rounded-full overflow-hidden bg-white border-4 border-white shadow-md">
+                      <Image
+                        src="/images/doc+hoso.png"
+                        alt={lang === "hi" ? "अस्पताल संबद्धता पोर्टल" : "Hospital Empanelment Portal"}
+                        fill
+                        sizes="(max-width: 768px) 240px, 300px"
+                        className="object-cover group-hover:scale-103 transition-transform duration-300"
+                        priority
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Text & Pitch Column */}
+                <div className="lg:col-span-7 space-y-4 order-1 lg:order-2 text-left">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold border border-indigo-200">
+                    <Building2 className="w-3.5 h-3.5" />
+                    <span>{lang === "hi" ? "अस्पताल संबद्धता पोर्टल" : "Institutional Empanelment Portal"}</span>
+                  </div>
+
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    {lang === "hi" ? (
+                      <>
+                        अपने अस्पताल को संबद्ध करें। <br />
+                        <span className="text-indigo-700 font-serif italic font-normal text-xl sm:text-2xl lg:text-3xl">
+                          आदित्यम् हेल्थकेयर संजाल से जुड़ें।
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        Empanel Your Hospital. <br />
+                        <span className="text-indigo-700 font-serif italic font-normal text-xl sm:text-2xl lg:text-3xl">
+                          Join India&apos;s Ethical Healthcare Network.
+                        </span>
+                      </>
+                    )}
+                  </h2>
+
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    {lang === "hi"
+                      ? "बिना किसी अग्रिम शुल्क के हजारों परिवारों तक पहुंच। ऑन-साइट केयर डेस्क, त्वरित कैशलेस टीपीए क्लीयरेंस और पारदर्शी पैकेज सर्जरी की सुविधा।"
+                      : "Expand patient reach with zero middleman commissions. Benefit from on-site patient coordinators, accelerated cashless insurance approvals, and streamlined surgery package admissions."}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-slate-700 font-medium pt-1">
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>{lang === "hi" ? "शून्य अग्रिम शुल्क" : "Zero Upfront Fees"}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>{lang === "hi" ? "48 घंटे में सत्यापन" : "48-Hour Verification"}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>{lang === "hi" ? "ऑन-साइट केयर डेस्क" : "On-Site Care Desk"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Submission Status Alerts */}
@@ -1292,7 +1492,12 @@ export default function HospitalsPage() {
         </section>
 
         {/* ====================================================================
-            8. INSTITUTIONAL HELPLINE BANNER
+            9. TATA 1MG STYLE APP DOWNLOAD BANNER
+        ==================================================================== */}
+        <AppPromo lang={lang} />
+
+        {/* ====================================================================
+            10. INSTITUTIONAL HELPLINE BANNER
         ==================================================================== */}
         <section className="py-10 bg-gradient-to-r from-[#172554] via-[#1E3A8A] to-[#172554] text-white px-4 sm:px-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">

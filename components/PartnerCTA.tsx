@@ -1,21 +1,17 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import Image from "next/image";
 import {
+  Stethoscope,
   Building2,
-  TrendingUp,
-  ShieldCheck,
-  Award,
-  Users2,
-  FileCheck2,
-  ArrowRight,
-  Handshake,
+  CheckCircle2,
+  Lock,
   Clock,
-  Sparkles,
+  CreditCard,
+  ArrowRight,
   PhoneCall,
-  BadgeCheck,
 } from "lucide-react";
 
 interface PartnerCTAProps {
@@ -25,306 +21,226 @@ interface PartnerCTAProps {
 
 export default function PartnerCTA({
   lang = "en",
-  onOpenPartner,
 }: PartnerCTAProps) {
-  const sectionRef = useRef<HTMLElement>(null);
+  const isHi = lang === "hi";
 
-  // Locomotive-style smooth scroll tracking
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  // Spring physics for ultra-fluid momentum
-  const springConfig = { stiffness: 85, damping: 26, mass: 0.6 };
-
-  // Parallax float for atmospheric depth orbs
-  const rawOrb1Y = useTransform(scrollYProgress, [0, 1], [-90, 90]);
-  const rawOrb2Y = useTransform(scrollYProgress, [0, 1], [90, -90]);
-  const orb1Y = useSpring(rawOrb1Y, springConfig);
-  const orb2Y = useSpring(rawOrb2Y, springConfig);
-
-  // Card reveal & scale dynamics as section enters viewport
-  const rawCardScale = useTransform(scrollYProgress, [0, 0.45], [0.93, 1]);
-  const rawCardY = useTransform(scrollYProgress, [0, 0.45], [55, 0]);
-  const rawCardOpacity = useTransform(scrollYProgress, [0, 0.25], [0.65, 1]);
-  const cardScale = useSpring(rawCardScale, springConfig);
-  const cardY = useSpring(rawCardY, springConfig);
-
-  // Locomotive staggered parallax offset for the right-hand verification console
-  const rawRightColY = useTransform(scrollYProgress, [0.1, 0.9], [40, -40]);
-  const rightColY = useSpring(rawRightColY, springConfig);
-
-  const benefits = [
+  const trustPillars = [
     {
-      icon: TrendingUp,
-      titleEn: "Expanded Patient Reach",
-      titleHi: "विशाल मरीज समुदाय",
-      descEn: "Connect with thousands of patients seeking trusted, verified healthcare providers across key urban centers.",
-      descHi: "प्रमुख शहरों में विश्वसनीय व प्रमाणित चिकित्सा की खोज कर रहे हजारों मरीजों तक सीधी पहुंच।",
-      badgeColor: "text-sky-400 bg-sky-950/60 border-sky-500/30",
+      icon: Lock,
+      titleEn: "100% Confidential",
+      titleHi: "१००% पूर्ण गोपनीयता",
+      descEn: "Strict DPDP Act 2023 compliance. Zero sale or commercialization of patient health data.",
+      descHi: "डीपीडीपी एक्ट २०२३ के अनुसार मरीज डेटा की पूर्ण सुरक्षा। कोई व्यावसायिक सौदा नहीं।",
+      color: "text-blue-600 bg-blue-50 border-blue-200",
     },
     {
-      icon: FileCheck2,
-      titleEn: "Streamlined Digital OPD",
-      titleHi: "कतार-मुक्त डिजिटल ओपीडी",
-      descEn: "Zero manual queue friction. Automated digital appointment scheduling, token management, and pre-consult history.",
-      descHi: "रिसेप्शन पर भीड़ से मुक्ति। स्वचालित डिजिटल टोकन, पूर्व-अपॉइंटमेंट और मरीज हिस्ट्री।",
-      badgeColor: "text-emerald-400 bg-emerald-950/60 border-emerald-500/30",
+      icon: Stethoscope,
+      titleEn: "Certified Specialists",
+      titleHi: "प्रमाणित विशेषज्ञ डॉक्टर्स",
+      descEn: "Every doctor is council-verified with transparent credentials and audited clinical track records.",
+      descHi: "प्रत्येक डॉक्टर मेडिकल काउंसिल द्वारा सत्यापित और अनुभवी चिकित्सा पृष्ठभूमि से संबद्ध।",
+      color: "text-emerald-600 bg-emerald-50 border-emerald-200",
     },
     {
-      icon: Users2,
-      titleEn: "Verified Community Trust",
-      titleHi: "विश्वसनीय सामाजिक साख",
-      descEn: "Direct access to an engaged community that values ethical medical standards, high compliance, and mutual respect.",
-      descHi: "नैतिक चिकित्सा मानकों, अनुशासन और परस्पर सम्मान को महत्व देने वाले समुदाय से सीधा जुड़ाव।",
-      badgeColor: "text-amber-400 bg-amber-950/60 border-amber-500/30",
+      icon: Clock,
+      titleEn: "Queue-Free OPD",
+      titleHi: "कतार-मुक्त ओपीडी",
+      descEn: "Digital token management to bypass general reception queues and long waiting hours.",
+      descHi: "डिजिटल टोकन से अस्पताल रिसेप्शन पर लंबी कतारों और अनावश्यक प्रतीक्षा से मुक्ति।",
+      color: "text-amber-600 bg-amber-50 border-amber-200",
     },
     {
-      icon: Award,
-      titleEn: "Enhanced Institutional Brand",
-      titleHi: "प्रतिष्ठित संस्थागत पहचान",
-      descEn: "Position your hospital or clinic as a benchmark of transparency, dignified care, and community leadership.",
-      descHi: "अपने अस्पताल को पारदर्शिता, गरिमापूर्ण सेवा और परोपकारी नेतृत्व के नए मानक के रूप में स्थापित करें।",
-      badgeColor: "text-purple-400 bg-purple-950/60 border-purple-500/30",
+      icon: CreditCard,
+      titleEn: "Pre-Fixed Fair Tariffs",
+      titleHi: "पूर्व-निर्धारित निष्पक्ष दरें",
+      descEn: "Direct institutional pricing with zero middleman commissions or surprise hospital billing.",
+      descHi: "सीधे रियायती संस्थागत दरें। कोई मध्यस्थ कमीशन नहीं और न ही कोई छिपा हुआ बिल।",
+      color: "text-purple-600 bg-purple-50 border-purple-200",
     },
   ];
 
   return (
-    <section
-      ref={sectionRef}
-      id="for-providers"
-      className="py-24 sm:py-32 font-sans select-none relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(180deg, #020409 0%, #060E1F 20%, #0A1633 50%, #172B56 80%, #FAFAF8 100%)",
-      }}
-    >
-      {/* 3D Atmospheric Soft Lighting Orbs with Parallax Float */}
-      <motion.div
-        style={{ y: orb1Y }}
-        className="absolute top-10 left-10 w-[550px] h-[550px] bg-blue-600/15 rounded-full blur-[150px] pointer-events-none"
-      />
-      <motion.div
-        style={{ y: orb2Y }}
-        className="absolute bottom-10 right-10 w-[550px] h-[550px] bg-amber-500/12 rounded-full blur-[150px] pointer-events-none"
-      />
+    <section id="for-providers" className="py-16 sm:py-24 bg-[#F8FAFC] font-sans border-t border-slate-200/80">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
-        
-        {/* ==============================================================
-            MAIN ARCHITECTURAL PARTNERSHIP SLAB with Locomotive Momentum Reveal
-        ============================================================== */}
-        <motion.div
-          style={{
-            scale: cardScale,
-            y: cardY,
-            opacity: rawCardOpacity,
-          }}
-          className="relative bg-gradient-to-br from-[#0B1B4D] via-[#0E235E] to-[#071333] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] p-8 sm:p-12 lg:p-16 border-2 border-[#1E3A8A]/60 border-b-[8px] border-b-[#050D24]"
-        >
-          {/* Subtle Ambient Radial Glows inside Card */}
-          <div className="absolute -top-32 -right-32 w-[450px] h-[450px] bg-blue-500/20 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute -bottom-32 -left-32 w-[450px] h-[450px] bg-amber-500/15 rounded-full blur-[100px] pointer-events-none" />
+        {/* ====================================================================
+            1. TATA 1MG STYLE "ARE YOU A DOCTOR?" BANNER
+        ==================================================================== */}
+        <div className="relative bg-gradient-to-br from-[#FFFDF8] via-[#FAF7EE] to-[#F5EEDB] rounded-3xl p-6 sm:p-10 lg:p-12 border border-amber-200/80 shadow-md overflow-hidden">
+          {/* Subtle Ambient Decorative Circles */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-amber-300/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-400/10 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            {/* ============================================================
-                LEFT COLUMN: Core Value Proposition & 4 Benefits
-            ============================================================ */}
-            <div className="lg:col-span-7 space-y-7">
-              
-              {/* 3D Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-amber-300 text-xs font-bold border border-white/20 border-b-2 border-b-amber-500 shadow-md">
-                <Handshake className="w-4 h-4 text-amber-400" />
-                <span>
-                  {lang === "hi"
-                    ? "अस्पताल एवं चिकित्सक संबद्धता कार्यक्रम"
-                    : "HEALTHCARE PARTNERSHIP PROGRAM"}
-                </span>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+            {/* Left: Doctor & Hospital Illustration */}
+            <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
+              <div className="relative w-64 h-64 sm:w-76 sm:h-76 lg:w-84 lg:h-84 drop-shadow-2xl group">
+                <div className="absolute -inset-1.5 bg-gradient-to-tr from-blue-500/25 to-amber-400/25 rounded-full blur-xl group-hover:scale-105 transition-transform" />
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-white shadow-lg border-4 border-white/90">
+                  <Image
+                    src="/images/doc+hoso.png"
+                    alt={isHi ? "डॉक्टर एवं अस्पताल संबद्धता" : "Are you a doctor or hospital? Partner with Adityam Niramayaa"}
+                    fill
+                    sizes="(max-width: 768px) 280px, 360px"
+                    className="object-cover group-hover:scale-103 transition-transform duration-300"
+                    priority
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Clean, Inviting Copy & Action Buttons */}
+            <div className="lg:col-span-7 space-y-5 order-1 lg:order-2 text-left">
+
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-900 text-xs font-bold border border-amber-400/30">
+
+                <span>{isHi ? "चिकित्सक एवं अस्पताल संबद्धता" : "For Doctors & Healthcare Providers"}</span>
               </div>
 
-              {/* Title */}
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white tracking-tight leading-[1.12]">
-                {lang === "hi" ? (
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                {isHi ? (
                   <>
-                    हमारे नेटवर्क से जुड़ें। <br />
-                    <span className="italic font-serif text-amber-300">
-                      सेवा और स्वास्थ्य का नया मानक बनाएं।
+                    क्या आप एक डॉक्टर या अस्पताल संचालक हैं? <br />
+                    <span className="text-blue-700 font-serif italic font-normal text-xl sm:text-2xl lg:text-3xl">
+                      हमारे समर्पित पैनल से जुड़ें।
                     </span>
                   </>
                 ) : (
                   <>
-                    Join Our Network. <br />
-                    <span className="italic font-serif text-amber-300">
-                      Let Us Build Dignified Care Together.
+                    Are you a Doctor or Hospital? <br />
+                    <span className="text-blue-700 font-serif italic font-normal text-xl sm:text-2xl lg:text-3xl">
+                      Join Our Verified Healthcare Panel.
                     </span>
                   </>
                 )}
               </h2>
 
-              <p className="text-slate-200 text-sm sm:text-base font-light leading-relaxed max-w-xl">
-                {lang === "hi"
-                  ? "आदित्यम् निरामय से संबद्धता केवल एक औपचारिक अनुबंध नहीं — यह गरिमापूर्ण, पारदर्शी और समर्पित चिकित्सा का पावन संकल्प है। अपने अस्पताल को नैतिक संस्थागत मरीज प्रवाह से सशक्त करें।"
-                  : "Partnering with Adityam Niramayaa is more than a commercial agreement — it is a commitment to purposeful growth. Empower your hospital or practice with qualified patient flow while upholding human dignity."}
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl font-normal">
+                {isHi
+                  ? "हजारों मरीजों से सीधा जुड़ाव। बिना किसी पंजीकरण शुल्क के डिजिटल ओपीडी, पूर्व-सत्यापित मरीज हिस्ट्री और कैशलेस अस्पताल सहायता प्राप्त करें।"
+                  : "Be a part of our certified specialist network. Connect with patients in your city, manage digital OPD appointments effortlessly, and offer cashless care with zero listing fees."}
               </p>
 
-              {/* 4 Benefits Grid (3D Solid Mini-Slabs with Smooth Hover Response) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                {benefits.map((item, idx) => {
-                  const Icon = item.icon;
-                  const title = lang === "hi" ? item.titleHi : item.titleEn;
-                  const desc = lang === "hi" ? item.descHi : item.descEn;
-
-                  return (
-                    <div
-                      key={idx}
-                      className="bg-[#071330] border border-[#172D61] border-b-[3px] border-b-[#050F26] rounded-2xl p-4.5 hover:border-amber-400/50 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group cursor-default"
-                    >
-                      <div className="flex items-center gap-2.5 mb-2 font-serif font-bold text-sm text-white group-hover:text-amber-300 transition-colors">
-                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center border shadow-xs ${item.badgeColor} group-hover:scale-105 transition-transform`}>
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <span>{title}</span>
-                      </div>
-                      <p className="text-xs text-slate-300 font-light leading-relaxed">
-                        {desc}
-                      </p>
-                    </div>
-                  );
-                })}
+              {/* 3 Value Bullets */}
+              <div className="flex flex-wrap items-center gap-y-2 gap-x-5 text-xs text-slate-700 pt-1 font-medium">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>{isHi ? "शून्य पंजीकरण शुल्क" : "Zero Listing Fees"}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>{isHi ? "48 घंटे में ऑनबोर्डिंग" : "48-Hour Onboarding"}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>{isHi ? "डिजिटल टोकन ओपीडी" : "Queue-Free Digital OPD"}</span>
+                </div>
               </div>
 
-              {/* 3D Action Buttons */}
-              <div className="pt-3 flex flex-wrap items-center gap-4">
+              {/* Dual Action Buttons (Clean & Premium) */}
+              <div className="pt-2 flex flex-wrap items-center gap-3">
                 <Link
-                  href="/join-network"
-                  className="px-8 py-4 bg-gradient-to-b from-[#F59E0B] to-[#D97706] hover:from-[#FBBF24] hover:to-[#F59E0B] text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-xl border border-amber-300 border-b-[4px] border-b-[#92400E] active:border-b-0 active:translate-y-1 transition-all flex items-center gap-2.5 cursor-pointer"
+                  href="/join-network#register-doctor"
+                  className="px-6 py-3 bg-[#0A1128] hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-2 hover:translate-y-[-1px] active:translate-y-0 cursor-pointer"
                 >
-                  <Building2 className="w-4 h-4 text-slate-950" />
-                  <span>
-                    {lang === "hi"
-                      ? "अस्पताल संबद्धता फॉर्म भरें"
-                      : "Register Your Hospital / Clinic"}
-                  </span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Stethoscope className="w-4 h-4 text-blue-400" />
+                  <span>{isHi ? "डॉक्टर पंजीकरण" : "Register as Doctor"}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
                 </Link>
 
-                <div className="text-xs text-slate-300 flex items-center gap-2 font-medium">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>
-                    {lang === "hi"
-                      ? "प्रमाणित अस्पतालों हेतु शून्य पंजीकरण शुल्क"
-                      : "Zero upfront listing fee for accredited centers"}
-                  </span>
-                </div>
+                <Link
+                  href="/join-network#register-hospital"
+                  className="px-5 py-3 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs sm:text-sm rounded-xl border border-slate-300 shadow-2xs transition-all flex items-center gap-2 hover:translate-y-[-1px] active:translate-y-0 cursor-pointer"
+                >
+                  <Building2 className="w-4 h-4 text-amber-600" />
+                  <span>{isHi ? "अस्पताल जोड़ें" : "Empanel Hospital"}</span>
+                </Link>
+
+                <a
+                  href="tel:18002081008"
+                  className="text-xs text-slate-600 hover:text-slate-900 font-semibold flex items-center gap-1.5 ml-1"
+                >
+                  <PhoneCall className="w-3.5 h-3.5 text-blue-600" />
+                  <span>1800-208-1008</span>
+                </a>
               </div>
 
             </div>
 
-            {/* ============================================================
-                RIGHT COLUMN: Locomotive Floating Verification Console
-            ============================================================ */}
-            <motion.div
-              style={{ y: rightColY }}
-              className="lg:col-span-5 bg-[#061229] border-2 border-[#1E3A8A]/80 border-b-[6px] border-b-[#030A17] rounded-[2rem] p-7 sm:p-8 text-white space-y-6 shadow-2xl transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(37,99,235,0.25)]"
-            >
-              
-              {/* Header */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <div className="flex items-center gap-2">
-                  <BadgeCheck className="w-5 h-5 text-amber-400" />
-                  <h3 className="font-serif font-bold text-base sm:text-lg text-white">
-                    {lang === "hi"
-                      ? "संस्थागत नेटवर्क मानक"
-                      : "Institutional Network Standards"}
-                  </h3>
-                </div>
-                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Active
-                </span>
-              </div>
+          </div>
+        </div>
 
-              {/* Verified Sample Hospitals Chips */}
-              <div className="space-y-2">
-                <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                  {lang === "hi" ? "प्रमुख संबद्ध अस्पताल" : "Empanelled Network Anchors"}
-                </div>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  <span className="bg-[#0C1E42] border border-[#1E3A8A] text-sky-200 px-3 py-1 rounded-xl font-medium shadow-xs hover:border-sky-400 transition-colors">
-                    🏥 Jain ENT Hospital
-                  </span>
-                  <span className="bg-[#0C1E42] border border-[#1E3A8A] text-sky-200 px-3 py-1 rounded-xl font-medium shadow-xs hover:border-sky-400 transition-colors">
-                    🏥 CKS Hospital
-                  </span>
-                  <span className="bg-[#0C1E42] border border-[#1E3A8A] text-sky-200 px-3 py-1 rounded-xl font-medium shadow-xs hover:border-sky-400 transition-colors">
-                    🏥 Arihant Hospital
-                  </span>
-                  <span className="bg-[#0C1E42] border border-[#1E3A8A] text-sky-200 px-3 py-1 rounded-xl font-medium shadow-xs hover:border-sky-400 transition-colors">
-                    🏥 Mahaveer Hospital
-                  </span>
-                </div>
-              </div>
-
-              {/* Statistics Strip */}
-              <div className="space-y-3.5 pt-2">
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <span className="text-xs text-slate-300 font-light">
-                    {lang === "hi" ? "संबद्ध विशेषज्ञ डॉक्टर्स" : "Empanelled Specialists"}
-                  </span>
-                  <span className="text-base font-extrabold text-white">2,500+</span>
-                </div>
-
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <span className="text-xs text-slate-300 font-light">
-                    {lang === "hi" ? "सहयोगी अस्पताल एवं केंद्र" : "Partner Hospitals & Pavilions"}
-                  </span>
-                  <span className="text-base font-extrabold text-white">500+</span>
-                </div>
-
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <span className="text-xs text-slate-300 font-light">
-                    {lang === "hi" ? "कैशलेस TPA बीमा सहायता" : "100% Cashless TPA Desks"}
-                  </span>
-                  <span className="text-sm font-bold text-emerald-400">Integrated</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-300 font-light">
-                    {lang === "hi" ? "औसत सत्यापन एवं ऑनबोर्डिंग" : "Average Onboarding Time"}
-                  </span>
-                  <span className="text-sm font-bold text-amber-400 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>48 Hours</span>
-                  </span>
-                </div>
-              </div>
-
-              {/* Direct Institutional Helpline */}
-              <div className="p-4 bg-[#0B1E45] border border-[#1E3A8A] rounded-2xl flex items-center justify-between text-xs">
-                <div>
-                  <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                    {lang === "hi" ? "संस्थागत डेस्क फोन" : "Institutional Desk"}
-                  </div>
-                  <div className="text-sm font-bold text-white mt-0.5">
-                    1800-208-1008
-                  </div>
-                </div>
-                <a
-                  href="tel:18002081008"
-                  className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/20 transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95"
-                >
-                  <PhoneCall className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Call Now</span>
-                </a>
-              </div>
-
-            </motion.div>
-
+        {/* ====================================================================
+            2. TATA 1MG STYLE STATS STRIP (Clean & Authoritative)
+        ==================================================================== */}
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-2xs grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 text-center">
+          <div className="pt-2 sm:pt-0">
+            <div className="text-2xl sm:text-3xl font-extrabold text-blue-700 font-sans tracking-tight">
+              2,500+
+            </div>
+            <div className="text-xs font-semibold text-slate-700 mt-1">
+              {isHi ? "सत्यापित विशेषज्ञ डॉक्टर्स" : "Empanelled Specialists"}
+            </div>
+            <div className="text-[11px] text-slate-400 mt-0.5">
+              {isHi ? "एम्स व शीर्ष संस्थानों के अनुभवी चिकित्सक" : "Verified council credentials"}
+            </div>
           </div>
 
-        </motion.div>
+          <div className="pt-4 sm:pt-0 sm:pl-8">
+            <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 font-sans tracking-tight">
+              500+
+            </div>
+            <div className="text-xs font-semibold text-slate-700 mt-1">
+              {isHi ? "सहयोगी अस्पताल एवं क्लिनिक्स" : "Partner Hospitals & Pavilions"}
+            </div>
+            <div className="text-[11px] text-slate-400 mt-0.5">
+              {isHi ? "जयपुर, दिल्ली एनसीआर, मुंबई, इंदौर" : "Key urban healthcare hubs"}
+            </div>
+          </div>
+
+          <div className="pt-4 sm:pt-0 sm:pl-8">
+            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 font-sans tracking-tight">
+              100%
+            </div>
+            <div className="text-xs font-semibold text-slate-700 mt-1">
+              {isHi ? "कैशलेस टीपीए डेस्क सहायता" : "Cashless TPA Desks"}
+            </div>
+            <div className="text-[11px] text-slate-400 mt-0.5">
+              {isHi ? "अस्पताल मित्र ऑन-ग्राउंड सहयोग" : "Zero middleman disputes"}
+            </div>
+          </div>
+        </div>
+
+        {/* ====================================================================
+            3. TATA 1MG STYLE 4 TRUST PILLARS
+        ==================================================================== */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {trustPillars.map((pillar, idx) => {
+            const Icon = pillar.icon;
+            const title = isHi ? pillar.titleHi : pillar.titleEn;
+            const desc = isHi ? pillar.descHi : pillar.descEn;
+
+            return (
+              <div
+                key={idx}
+                className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center border mb-3.5 ${pillar.color}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-bold text-sm sm:text-base text-slate-900 mb-1.5">
+                    {title}
+                  </h3>
+                  <p className="text-xs text-slate-500 leading-relaxed font-normal">
+                    {desc}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
       </div>
     </section>

@@ -192,15 +192,14 @@ export default function Navbar({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative px-3 py-1.5 rounded-lg text-xs xl:text-[13px] font-semibold transition-colors duration-150 flex items-center gap-1.5 ${
-                    isActive
+                  className={`relative px-3 py-1.5 rounded-lg text-xs xl:text-[13px] font-semibold transition-colors duration-150 flex items-center gap-1.5 ${isActive
                       ? item.isVision
                         ? "text-amber-300 font-bold bg-white/10"
                         : "text-white font-bold bg-white/10"
                       : item.isVision
-                      ? "text-amber-200/90 hover:text-amber-300 hover:bg-white/5"
-                      : "text-blue-100/75 hover:text-white hover:bg-white/5"
-                  }`}
+                        ? "text-amber-200/90 hover:text-amber-300 hover:bg-white/5"
+                        : "text-blue-100/75 hover:text-white hover:bg-white/5"
+                    }`}
                 >
                   {item.isVision && <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
                   <span>{lang === "hi" ? item.labelHi : item.labelEn}</span>
@@ -221,22 +220,20 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={() => handleToggleLang("en")}
-                className={`px-2 xl:px-2.5 py-0.5 xl:py-1 rounded-full transition-all cursor-pointer ${
-                  lang === "en"
+                className={`px-2 xl:px-2.5 py-0.5 xl:py-1 rounded-full transition-all cursor-pointer ${lang === "en"
                     ? "bg-amber-400 text-slate-950 font-black shadow-xs"
                     : "text-white/80 hover:text-white"
-                }`}
+                  }`}
               >
                 ENG
               </button>
               <button
                 type="button"
                 onClick={() => handleToggleLang("hi")}
-                className={`px-2 xl:px-2.5 py-0.5 xl:py-1 rounded-full transition-all cursor-pointer ${
-                  lang === "hi"
+                className={`px-2 xl:px-2.5 py-0.5 xl:py-1 rounded-full transition-all cursor-pointer ${lang === "hi"
                     ? "bg-amber-400 text-slate-950 font-black shadow-xs"
                     : "text-white/80 hover:text-white"
-                }`}
+                  }`}
               >
                 हिंदी
               </button>
@@ -245,11 +242,10 @@ export default function Navbar({
             {/* Desktop Join Partner CTA (Links to Dedicated Page) */}
             <Link
               href="/join-network"
-              className={`hidden xl:flex px-4 py-2 text-xs font-semibold rounded-full transition-all items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                pathname === "/join-network"
+              className={`hidden xl:flex px-4 py-2 text-xs font-semibold rounded-full transition-all items-center gap-1.5 cursor-pointer whitespace-nowrap ${pathname === "/join-network"
                   ? "bg-amber-400 text-slate-950 font-bold border border-amber-400 shadow-sm"
                   : "text-white/90 hover:text-white border border-white/20 hover:bg-white/10"
-              }`}
+                }`}
             >
               <Building2 className="w-3.5 h-3.5" />
               <span>{lang === "hi" ? "नेटवर्क से जुड़ें" : "Join Network"}</span>
@@ -258,11 +254,10 @@ export default function Navbar({
             {/* App Download CTA (Links to Dedicated Page) */}
             <Link
               href="/get-app"
-              className={`hidden sm:flex px-3.5 xl:px-5 py-1.5 xl:py-2 text-xs font-bold text-[#172554] bg-white hover:bg-blue-50 rounded-full shadow-sm transition-all items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                pathname === "/get-app"
+              className={`hidden sm:flex px-3.5 xl:px-5 py-1.5 xl:py-2 text-xs font-bold text-[#172554] bg-white hover:bg-blue-50 rounded-full shadow-sm transition-all items-center gap-1.5 cursor-pointer whitespace-nowrap ${pathname === "/get-app"
                   ? "ring-2 ring-amber-400 font-black"
                   : ""
-              }`}
+                }`}
             >
               <Smartphone className="w-3.5 h-3.5 text-[#172554]" />
               <span>{lang === "hi" ? "ऐप डाउनलोड" : "Get App"}</span>
@@ -368,22 +363,20 @@ export default function Navbar({
                   <button
                     type="button"
                     onClick={() => handleToggleLang("en")}
-                    className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${
-                      lang === "en"
+                    className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${lang === "en"
                         ? "bg-amber-400 text-slate-950 font-black shadow-xs"
                         : "text-white/80"
-                    }`}
+                      }`}
                   >
                     ENG
                   </button>
                   <button
                     type="button"
                     onClick={() => handleToggleLang("hi")}
-                    className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${
-                      lang === "hi"
+                    className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${lang === "hi"
                         ? "bg-amber-400 text-slate-950 font-black shadow-xs"
                         : "text-white/80"
-                    }`}
+                      }`}
                   >
                     हिंदी
                   </button>
@@ -414,11 +407,10 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={() => handleNavClick("/doctors")}
-                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
-                  pathname === "/doctors"
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${pathname === "/doctors"
                     ? "border-[#2563EB] bg-blue-50/50 ring-2 ring-[#2563EB]/20 shadow-sm"
                     : "border-slate-200/90 shadow-2xs hover:shadow-md"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center shrink-0">
@@ -447,11 +439,10 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={() => handleNavClick("/diagnostics")}
-                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
-                  pathname === "/diagnostics"
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${pathname === "/diagnostics"
                     ? "border-emerald-500 bg-emerald-50/50 ring-2 ring-emerald-500/20 shadow-sm"
                     : "border-slate-200/90 shadow-2xs hover:shadow-md"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
@@ -480,11 +471,10 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={() => handleNavClick("/pharmacy")}
-                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
-                  pathname === "/pharmacy"
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${pathname === "/pharmacy"
                     ? "border-amber-500 bg-amber-50/50 ring-2 ring-amber-500/20 shadow-sm"
                     : "border-slate-200/90 shadow-2xs hover:shadow-md"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0">
@@ -513,11 +503,10 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={() => handleNavClick("/hospitals")}
-                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
-                  pathname === "/hospitals"
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${pathname === "/hospitals"
                     ? "border-indigo-500 bg-indigo-50/50 ring-2 ring-indigo-500/20 shadow-sm"
                     : "border-slate-200/90 shadow-2xs hover:shadow-md"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0">
@@ -546,11 +535,10 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={() => handleNavClick("/about")}
-                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
-                  pathname === "/about"
+                className={`w-full bg-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${pathname === "/about"
                     ? "border-[#2563EB] bg-blue-50/50 ring-2 ring-[#2563EB]/20 shadow-sm"
                     : "border-slate-200/90 shadow-2xs hover:shadow-md"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center shrink-0">
@@ -579,15 +567,14 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={() => handleNavClick("/vision")}
-                className={`w-full bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${
-                  pathname === "/vision"
+                className={`w-full bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-white p-4 rounded-2xl border transition-all flex items-center justify-between text-left group cursor-pointer ${pathname === "/vision"
                     ? "border-amber-400 ring-2 ring-amber-400/30 shadow-sm"
                     : "border-amber-300/80 shadow-2xs hover:border-amber-400"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-700 border border-amber-400/40 flex items-center justify-center shrink-0">
-                    <Sparkles className="w-5 h-5 text-amber-600" />
+
                   </div>
                   <div>
                     <div className="flex items-center gap-2">

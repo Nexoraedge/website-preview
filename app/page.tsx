@@ -51,7 +51,7 @@ export default function HomePage() {
         {/* 6. How It Works (4-Step Patient Journey) */}
         <HowItWorks lang={lang} />
 
-        {/* 7. Provider & Hospital Empanelment CTA */}
+        {/* 7. Provider & Hospital Empanelment CTA (Tata 1mg Style) */}
         <PartnerCTA lang={lang} />
 
         {/* 8. Mobile App Promotion & Direct Download */}
